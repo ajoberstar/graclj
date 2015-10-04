@@ -5,4 +5,6 @@ import org.gradle.language.base.LanguageSourceSet;
 
 public interface ClojureSourceSet extends LanguageSourceSet {
     Classpath getCompileClasspath();
+
+    String getAotPattern();
 }
