@@ -12,9 +12,4 @@ public class DefaultClojureSourceSet extends BaseLanguageSourceSet implements Cl
     public Classpath getCompileClasspath() {
         return new EmptyClasspath();
     }
-
-    @Override
-    public String getAotPattern() {
-        return "(?!)";
-    }
 }

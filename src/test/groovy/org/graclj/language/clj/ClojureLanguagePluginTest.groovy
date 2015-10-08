@@ -4,9 +4,10 @@ import org.gradle.testkit.runner.GradleRunner
 import spock.lang.Specification
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
+import java.nio.file.Paths
 
 class ClojureLanguagePluginTest extends Specification {
-    private static final String PLUGIN_REPO = System.properties['plugin.repo']
+    private static final URI PLUGIN_REPO = Paths.get(System.properties['plugin.repo']).toUri()
 
     @Rule TemporaryFolder projectDir = new TemporaryFolder()
 

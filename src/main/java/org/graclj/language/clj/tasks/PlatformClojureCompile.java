@@ -8,7 +8,6 @@ import java.io.File;
 public class PlatformClojureCompile extends SourceTask {
     private File destinationDir;
     private FileCollection classpath;
-    private String aotPattern;
 
     @OutputDirectory
     public File getDestinationDir() {
@@ -26,15 +25,6 @@ public class PlatformClojureCompile extends SourceTask {
 
     public void setClasspath(FileCollection configuration) {
         this.classpath = configuration;
-    }
-
-    @Input
-    public String getAotPattern() {
-        return aotPattern;
-    }
-
-    public void setAotPattern(String aotPattern) {
-        this.aotPattern = aotPattern;
     }
 
     @TaskAction

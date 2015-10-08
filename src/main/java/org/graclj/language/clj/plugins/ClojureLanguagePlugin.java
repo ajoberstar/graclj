@@ -12,7 +12,6 @@ import org.gradle.api.Task;
 import org.gradle.internal.service.ServiceRegistry;
 import org.gradle.jvm.JvmBinarySpec;
 import org.gradle.jvm.JvmByteCode;
-import org.gradle.jvm.JvmResources;
 import org.gradle.language.base.LanguageSourceSet;
 import org.gradle.language.base.internal.SourceTransformTaskConfig;
 import org.gradle.language.base.internal.registry.LanguageTransform;
@@ -51,7 +50,7 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
     }
 
     @InternalUse("Language transform is internal")
-    private static class Clojure implements LanguageTransform<ClojureSourceSet, JvmResources> {
+    private static class Clojure implements LanguageTransform<ClojureSourceSet, JvmByteCode> {
 
         @Override
         public Class<ClojureSourceSet> getSourceSetType() {
@@ -59,8 +58,8 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
         }
 
         @Override
-        public Class<JvmResources> getOutputType() {
-            return JvmResources.class;
+        public Class<JvmByteCode> getOutputType() {
+            return JvmByteCode.class;
         }
 
         @DontUnderstand("What can this be used for?")
@@ -88,11 +87,9 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
                     JvmBinarySpec binary = (JvmBinarySpec) binarySpec;
                     ClojureSourceSet sourceSet = (ClojureSourceSet) languageSourceSet;
 
-                    compile.setDescription(String.format("Compiles %s without AOT", sourceSet));
-                    compile.setDestinationDir(binary.getResourcesDir());
-//                    compile.setToolChain();
+                    compile.setDescription(String.format("AOT compiles %s", sourceSet));
+                    compile.setDestinationDir(binary.getClassesDir());
                     compile.setClasspath(sourceSet.getCompileClasspath().getFiles());
-                    compile.dependsOn(sourceSet);
                     binary.getTasks().getJar().dependsOn(compile);
                 }
             };

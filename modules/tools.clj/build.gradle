@@ -1,0 +1,32 @@
+plugins {
+  id 'java'
+  id 'maven-publish'
+}
+
+group = 'org.graclj'
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile 'org.clojure:clojure:1.7.0'
+}
+
+jar {
+  from 'src/main/clojure'
+}
+
+publishing {
+  publications {
+      main(MavenPublication) {
+          from components.java
+      }
+  }
+}
+
+task sample(type: JavaExec) {
+  classpath jar
+  classpath configurations.compile
+  main = 'org.graclj.tools.clojure.Compiler'
+}
