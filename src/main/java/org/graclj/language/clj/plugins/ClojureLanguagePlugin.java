@@ -12,12 +12,14 @@ import org.gradle.api.Task;
 import org.gradle.internal.service.ServiceRegistry;
 import org.gradle.jvm.JvmBinarySpec;
 import org.gradle.jvm.JvmByteCode;
+import org.gradle.jvm.JvmResources;
 import org.gradle.language.base.LanguageSourceSet;
 import org.gradle.language.base.internal.SourceTransformTaskConfig;
 import org.gradle.language.base.internal.registry.LanguageTransform;
 import org.gradle.language.base.internal.registry.LanguageTransformContainer;
 import org.gradle.language.base.plugins.ComponentModelBasePlugin;
 import org.gradle.language.jvm.plugins.JvmResourcesPlugin;
+import org.gradle.language.jvm.tasks.ProcessResources;
 import org.gradle.model.Mutate;
 import org.gradle.model.RuleSource;
 import org.gradle.model.internal.manage.schema.ModelSchemaStore;
@@ -45,13 +47,63 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
         @InternalUse("Language transform is internal")
         @Mutate
         void registerLanguageTransform(LanguageTransformContainer languages) {
-            languages.add(new Clojure());
+            languages.add(new ClojureSource());
+            languages.add(new ClojureAot());
         }
     }
 
     @InternalUse("Language transform is internal")
-    private static class Clojure implements LanguageTransform<ClojureSourceSet, JvmByteCode> {
+    private static class ClojureSource implements LanguageTransform<ClojureSourceSet, JvmResources> {
+        @Override
+        public Class<ClojureSourceSet> getSourceSetType() {
+            return ClojureSourceSet.class;
+        }
 
+        @Override
+        public Class<JvmResources> getOutputType() {
+            return JvmResources.class;
+        }
+
+        @DontUnderstand("What can this be used for?")
+        @Override
+        public Map<String, Class<?>> getBinaryTools() {
+            return Collections.emptyMap();
+        }
+
+        @Override
+        public SourceTransformTaskConfig getTransformTask() {
+            return new SourceTransformTaskConfig() {
+                @Override
+                public String getTaskPrefix() {
+                    return "copy";
+                }
+
+                @Override
+                public Class<? extends DefaultTask> getTaskType() {
+                    return ProcessResources.class;
+                }
+
+                @Override
+                public void configureTask(Task task, BinarySpec binarySpec, LanguageSourceSet languageSourceSet, ServiceRegistry serviceRegistry) {
+                    ProcessResources resources = (ProcessResources) task;
+                    JvmBinarySpec binary = (JvmBinarySpec) binarySpec;
+                    ClojureSourceSet sourceSet = (ClojureSourceSet) languageSourceSet;
+
+                    compile.setDescription(String.format("Copies source for %s", sourceSet));
+                    compile.setDestinationDir(binary.getResourcesDir());
+                    binary.getTasks().getJar().dependsOn(resources);
+                }
+            };
+        }
+
+        @Override
+        public boolean applyToBinary(BinarySpec binarySpec) {
+            return binarySpec instanceof JvmBinarySpec;
+        }
+    }
+
+    @InternalUse("Language transform is internal")
+    private static class ClojureAot implements LanguageTransform<ClojureSourceSet, JvmByteCode> {
         @Override
         public Class<ClojureSourceSet> getSourceSetType() {
             return ClojureSourceSet.class;
