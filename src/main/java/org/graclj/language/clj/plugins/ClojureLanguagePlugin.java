@@ -4,7 +4,9 @@ import org.graclj.internal.DontUnderstand;
 import org.graclj.internal.InternalUse;
 import org.graclj.language.clj.ClojureSourceSet;
 import org.graclj.language.clj.internal.DefaultClojureSourceSet;
+import org.graclj.language.clj.internal.DefaultClojurePlatform;
 import org.graclj.language.clj.tasks.PlatformClojureCompile;
+import org.graclj.language.clj.toolchain.ClojureToolChain;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -20,6 +22,7 @@ import org.gradle.language.base.internal.registry.LanguageTransformContainer;
 import org.gradle.language.base.plugins.ComponentModelBasePlugin;
 import org.gradle.language.jvm.plugins.JvmResourcesPlugin;
 import org.gradle.language.jvm.tasks.ProcessResources;
+import org.gradle.model.Model;
 import org.gradle.model.Mutate;
 import org.gradle.model.RuleSource;
 import org.gradle.model.internal.manage.schema.ModelSchemaStore;
@@ -89,8 +92,9 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
                     JvmBinarySpec binary = (JvmBinarySpec) binarySpec;
                     ClojureSourceSet sourceSet = (ClojureSourceSet) languageSourceSet;
 
-                    compile.setDescription(String.format("Copies source for %s", sourceSet));
-                    compile.setDestinationDir(binary.getResourcesDir());
+                    resources.setDescription(String.format("Copies source for %s", sourceSet));
+                    resources.from(sourceSet.getSource());
+                    resources.setDestinationDir(binary.getResourcesDir());
                     binary.getTasks().getJar().dependsOn(resources);
                 }
             };
@@ -139,9 +143,13 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
                     JvmBinarySpec binary = (JvmBinarySpec) binarySpec;
                     ClojureSourceSet sourceSet = (ClojureSourceSet) languageSourceSet;
 
+                    // TODO: How do I input the platform elsewhere?
+                    compile.setPlatform(new DefaultClojurePlatform("1.7.0"));
+
                     compile.setDescription(String.format("AOT compiles %s", sourceSet));
-                    compile.setDestinationDir(binary.getClassesDir());
+                    compile.setSource(sourceSet.getSource());
                     compile.setClasspath(sourceSet.getCompileClasspath().getFiles());
+                    compile.setDestinationDir(binary.getClassesDir());
                     binary.getTasks().getJar().dependsOn(compile);
                 }
             };

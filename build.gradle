@@ -33,5 +33,6 @@ publishing {
 
 test {
     dependsOn 'publishMainPublicationToTestRepository'
+    dependsOn ':modules:graclj-tools:publishMainPublicationToMavenLocal'
     systemProperty 'plugin.repo', "${buildDir}/repo"
 }

@@ -4,6 +4,7 @@ plugins {
 }
 
 group = 'org.graclj'
+version = '0.1.0-SNAPSHOT'
 
 repositories {
   jcenter()
@@ -22,6 +23,9 @@ publishing {
       main(MavenPublication) {
           from components.java
       }
+  }
+  repositories {
+    mavenLocal()
   }
 }
 

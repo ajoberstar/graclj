@@ -28,11 +28,14 @@ buildscript {
 apply plugin: 'org.graclj.clojure-lang'
 apply plugin: 'jvm-component'
 
+repositories {
+  jcenter()
+  mavenLocal()
+}
+
 model {
     components {
-        main(JvmLibrarySpec) {
-
-        }
+        main(JvmLibrarySpec)
     }
 }
 
@@ -64,7 +67,7 @@ apply plugin: MyRules
         when: 'the build task is executed'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('build', 'clojureWorks', '--stacktrace')
+            .withArguments('clean', 'build', 'clojureWorks', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'
         result.tasks*.path == [
