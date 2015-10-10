@@ -11,6 +11,17 @@ Notes intended as feedback to Gradle devs about experience with new model plugin
       Hard to tell what those are meant to provide (if anything) for my code.
 - Is there any reason (besides backwards-compatibility) that the name "main" is still a special-case?
     - For example, compileJava would be compileMainJava without specializing "main".
+- For a user, there's a good split between internal/public features. For plugin authors, it's way out of
+  balance. 3rd-party plugins are essentially second-class due to the vast amount of internals that the
+  first-party plugins depend on:
+    - Daemon infrastructure
+    - Compiler infrastructure
+    - ServiceRegistry (?)
+    - PlatformResolver
+    - ToolChain/ToolProvider
+- Not understanding how to compose different languages.
+- Crazy tedious to write all of these impls.
+
 
 ## Model
 
@@ -30,13 +41,11 @@ Notes intended as feedback to Gradle devs about experience with new model plugin
 
 ## JVM
 
-- Using "resources" as the language name sames a little broad. How do other platforms with similar
-  needs name their equivalents? e.g. HTML files, images, etc. for a JS-pipeline.
 - How do you plan to compose variants on binaries (or in general)?
     - Best example is binaries that reflect multiple platform variants
     - e.g. Scala will have a Scala platform and a Java platform variant (I see a comment reflecting this in master)
-- Why is EmptClasspath noted as temporary? Seems like we need some 
-- Is it true that you can't add declare/resolve any dependencies that aren't just other Library components within the same multi-project build?
+- Why is EmptClasspath noted as temporary? Seems like we need some
+- Need third-party dependency support.
 
 ## Clojure
 

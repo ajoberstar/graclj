@@ -1,20 +1,20 @@
-package org.graclj.language.clj.plugins;
+package org.graclj.language.jvm.plugins;
 
 import org.graclj.internal.DontUnderstand;
 import org.graclj.internal.InternalUse;
-import org.graclj.language.clj.ClojureSourceSet;
-import org.graclj.language.clj.internal.DefaultClojureSourceSet;
-import org.graclj.language.clj.internal.DefaultClojurePlatform;
-import org.graclj.language.clj.tasks.PlatformClojureCompile;
-import org.graclj.language.clj.toolchain.ClojureToolChain;
-import org.gradle.api.DefaultTask;
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
-import org.gradle.api.Task;
+import org.graclj.language.jvm.ClojureJvmSourceSet;
+import org.graclj.language.jvm.internal.DefaultClojureJvmSourceSet;
+import org.graclj.language.jvm.tasks.ClojureJvmCompile;
+import org.graclj.platform.jvm.internal.DefaultClojureJvmPlatform;
+import org.graclj.platform.jvm.plugins.ClojureJvmPlatformPlugin;
+import org.graclj.platform.jvm.toolchain.ClojureJvmToolChainRegistry;
+import org.gradle.api.*;
+import org.gradle.api.tasks.TaskContainer;
 import org.gradle.internal.service.ServiceRegistry;
 import org.gradle.jvm.JvmBinarySpec;
 import org.gradle.jvm.JvmByteCode;
 import org.gradle.jvm.JvmResources;
+import org.gradle.jvm.platform.internal.DefaultJavaPlatform;
 import org.gradle.language.base.LanguageSourceSet;
 import org.gradle.language.base.internal.SourceTransformTaskConfig;
 import org.gradle.language.base.internal.registry.LanguageTransform;
@@ -22,10 +22,10 @@ import org.gradle.language.base.internal.registry.LanguageTransformContainer;
 import org.gradle.language.base.plugins.ComponentModelBasePlugin;
 import org.gradle.language.jvm.plugins.JvmResourcesPlugin;
 import org.gradle.language.jvm.tasks.ProcessResources;
-import org.gradle.model.Model;
+import org.gradle.model.Finalize;
+import org.gradle.model.ModelSet;
 import org.gradle.model.Mutate;
 import org.gradle.model.RuleSource;
-import org.gradle.model.internal.manage.schema.ModelSchemaStore;
 import org.gradle.platform.base.BinarySpec;
 import org.gradle.platform.base.LanguageType;
 import org.gradle.platform.base.LanguageTypeBuilder;
@@ -37,14 +37,15 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
     public void apply(Project project) {
         project.getPluginManager().apply(ComponentModelBasePlugin.class);
         project.getPluginManager().apply(JvmResourcesPlugin.class);
+        project.getPluginManager().apply(ClojureJvmPlatformPlugin.class);
     }
 
     @DontUnderstand("How does this get applied? It's not part of the plugin apply method.")
     static class Rules extends RuleSource {
         @LanguageType
-        void registerLanguage(LanguageTypeBuilder<ClojureSourceSet> builder) {
+        void registerLanguage(LanguageTypeBuilder<ClojureJvmSourceSet> builder) {
             builder.setLanguageName("clojure");
-            builder.defaultImplementation(DefaultClojureSourceSet.class);
+            builder.defaultImplementation(DefaultClojureJvmSourceSet.class);
         }
 
         @InternalUse("Language transform is internal")
@@ -53,13 +54,18 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
             languages.add(new ClojureSource());
             languages.add(new ClojureAot());
         }
+
+        @Finalize
+        void injectToolChainToCompile(TaskContainer tasks, ClojureJvmToolChainRegistry toolChainRegistry) {
+            tasks.withType(ClojureJvmCompile.class, task -> task.setToolChainRegistry(toolChainRegistry));
+        }
     }
 
     @InternalUse("Language transform is internal")
-    private static class ClojureSource implements LanguageTransform<ClojureSourceSet, JvmResources> {
+    private static class ClojureSource implements LanguageTransform<ClojureJvmSourceSet, JvmResources> {
         @Override
-        public Class<ClojureSourceSet> getSourceSetType() {
-            return ClojureSourceSet.class;
+        public Class<ClojureJvmSourceSet> getSourceSetType() {
+            return ClojureJvmSourceSet.class;
         }
 
         @Override
@@ -90,7 +96,7 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
                 public void configureTask(Task task, BinarySpec binarySpec, LanguageSourceSet languageSourceSet, ServiceRegistry serviceRegistry) {
                     ProcessResources resources = (ProcessResources) task;
                     JvmBinarySpec binary = (JvmBinarySpec) binarySpec;
-                    ClojureSourceSet sourceSet = (ClojureSourceSet) languageSourceSet;
+                    ClojureJvmSourceSet sourceSet = (ClojureJvmSourceSet) languageSourceSet;
 
                     resources.setDescription(String.format("Copies source for %s", sourceSet));
                     resources.from(sourceSet.getSource());
@@ -107,10 +113,10 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
     }
 
     @InternalUse("Language transform is internal")
-    private static class ClojureAot implements LanguageTransform<ClojureSourceSet, JvmByteCode> {
+    private static class ClojureAot implements LanguageTransform<ClojureJvmSourceSet, JvmByteCode> {
         @Override
-        public Class<ClojureSourceSet> getSourceSetType() {
-            return ClojureSourceSet.class;
+        public Class<ClojureJvmSourceSet> getSourceSetType() {
+            return ClojureJvmSourceSet.class;
         }
 
         @Override
@@ -134,17 +140,17 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
 
                 @Override
                 public Class<? extends DefaultTask> getTaskType() {
-                    return PlatformClojureCompile.class;
+                    return ClojureJvmCompile.class;
                 }
 
                 @Override
                 public void configureTask(Task task, BinarySpec binarySpec, LanguageSourceSet languageSourceSet, ServiceRegistry serviceRegistry) {
-                    PlatformClojureCompile compile = (PlatformClojureCompile) task;
+                    ClojureJvmCompile compile = (ClojureJvmCompile) task;
                     JvmBinarySpec binary = (JvmBinarySpec) binarySpec;
-                    ClojureSourceSet sourceSet = (ClojureSourceSet) languageSourceSet;
+                    ClojureJvmSourceSet sourceSet = (ClojureJvmSourceSet) languageSourceSet;
 
                     // TODO: How do I input the platform elsewhere?
-                    compile.setPlatform(new DefaultClojurePlatform("1.7.0"));
+                    compile.setPlatform(new DefaultClojureJvmPlatform(1, 7, 0, null, new DefaultJavaPlatform(JavaVersion.current())));
 
                     compile.setDescription(String.format("AOT compiles %s", sourceSet));
                     compile.setSource(sourceSet.getSource());

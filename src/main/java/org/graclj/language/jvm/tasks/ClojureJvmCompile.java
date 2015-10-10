@@ -1,39 +1,38 @@
-package org.graclj.language.clj.tasks;
+package org.graclj.language.jvm.tasks;
 
-import javax.inject.Inject;
-
-import org.gradle.api.Project;
+import org.graclj.platform.jvm.ClojureJvmPlatform;
+import org.graclj.platform.jvm.toolchain.ClojureJvmToolChain;
+import org.graclj.platform.jvm.toolchain.ClojureJvmToolChainRegistry;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.SourceTask;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.InputFiles;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.jvm.Classpath;
-import org.graclj.language.clj.ClojurePlatform;
-import org.graclj.language.clj.toolchain.ClojureToolChain;
-import org.graclj.language.clj.internal.DownloadingClojureToolChain;
 
 import java.io.File;
 
-public class PlatformClojureCompile extends SourceTask {
-    private ClojurePlatform platform;
+public class ClojureJvmCompile extends SourceTask {
+    private ClojureJvmPlatform platform;
+    private ClojureJvmToolChainRegistry toolChainRegistry;
     private File destinationDir;
     private FileCollection classpath;
-    private ClojureToolChain toolChain;
-
-    public PlatformClojureCompile() {
-        // TODO: How do I make this work through Gradle's ToolChain stuff?
-        this.toolChain = new DownloadingClojureToolChain(getProject().getConfigurations(), getProject().getDependencies());
-    }
 
     // @Input
-    public ClojurePlatform getPlatform() {
+    public ClojureJvmPlatform getPlatform() {
         return platform;
     }
 
-    public void setPlatform(ClojurePlatform platform) {
+    public void setPlatform(ClojureJvmPlatform platform) {
         this.platform = platform;
+    }
+
+    public ClojureJvmToolChain getToolChain() {
+        return toolChainRegistry.getForPlatform(getPlatform());
+    }
+
+    public void setToolChainRegistry(ClojureJvmToolChainRegistry toolChainRegistry) {
+        this.toolChainRegistry = toolChainRegistry;
     }
 
     @OutputDirectory
@@ -56,13 +55,18 @@ public class PlatformClojureCompile extends SourceTask {
 
     @TaskAction
     public void compile() {
-        Classpath clojure = toolChain.getClojure(platform);
+        Classpath compiler = getToolChain().getCompiler();
         getProject().javaexec(spec -> {
-            spec.classpath(clojure.getFiles());
+            spec.classpath(compiler.getFiles());
             spec.classpath(classpath);
+
+            // Clojure compiler requires source dirs and class dirs to be on classpath
+            spec.classpath(source);
             spec.classpath(destinationDir);
+
             spec.setMain("clojure.main");
             spec.args("--main", "org.graclj.tools.clojure");
+            // Location to write class files out to
             spec.args(destinationDir);
         });
     }

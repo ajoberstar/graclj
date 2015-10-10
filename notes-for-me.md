@@ -1,6 +1,6 @@
 # Implementation Notes
 
-## Graclj 
+## Graclj
 
 ### General
 
@@ -23,7 +23,7 @@
 ### Clojurescript
 
 - Is Classpath an accurate term in CLJS?
-    - How is the collection of CLJS dependencies referenced? 
+    - How is the collection of CLJS dependencies referenced?
 
 #### JavaScript
 
@@ -46,6 +46,8 @@
 - Do I need a platform for Clojure?
     - Would people target different versions of Clojure from their build?
     - Same question goes for ClojureScript
+- Can I just put the platforms on PlatformContainer?
+    - Does that cause a problem with versioned platforms?
 
 ### Language
 
@@ -55,3 +57,28 @@
 
 - Is this the right place to have the clj/cljs compilers come from?
     - Based on language-scala plugin, yes.
+
+### Play
+
+Seems like a more complete example of how this could work.
+
+- Use my own binary types?
+    - Could include an AOT JAR and a Source-Only JAR?
+    - BinaryTypeBuilder (not internal, yay!)
+    - Would these extend JvmBinarySpec still?
+- Might want my own component types too?
+    - Could have a ClojureLibrarySpec
+        - Include binaries for both AOT and source (maybe AOT w/ source too)
+    - ClojureScriptLibrarySpec
+    - Mixed clojure support somehow?
+    - ClojureApplicationSpec
+        - Use uberjar?
+    - Look into what other types of projects Lein supports.
+- @ComponentBinaries
+- Play has its own wrapper around configurations. Registers its artifacts there. May also be used for deps.
+- Separate configs for:
+    - compile
+    - runtime (?)
+    - dev (?)
+    - docs (?)
+    - test (?)

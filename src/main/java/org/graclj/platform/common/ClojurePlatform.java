@@ -1,4 +1,4 @@
-package org.graclj.language.clj;
+package org.graclj.platform.common;
 
 import org.gradle.platform.base.Platform;
 

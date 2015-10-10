@@ -1,4 +1,4 @@
-package org.graclj.language.clj
+package org.graclj.language.jvm
 
 import org.gradle.testkit.runner.GradleRunner
 import spock.lang.Specification
@@ -53,7 +53,7 @@ class MyRules extends RuleSource {
 apply plugin: MyRules
 """
         projectDir.newFolder('src', 'main', 'clojure', 'sample')
-        projectDir.newFile('src/main/clojure/sample/yay.clj') << """
+        projectDir.newFile('src/main/clojure/sample/yay.jvm') << """
 (ns 'sample.yay'
     (:require [clojure.string :as str]))
 
