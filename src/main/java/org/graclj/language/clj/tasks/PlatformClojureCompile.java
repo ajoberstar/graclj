@@ -23,16 +23,17 @@ public class PlatformClojureCompile extends SourceTask {
     private ClojureToolChain toolChain;
 
     public PlatformClojureCompile() {
-      this.toolChain = new DownloadingClojureToolChain(getProject().getConfigurations(), getProject().getDependencies());
+        // TODO: How do I make this work through Gradle's ToolChain stuff?
+        this.toolChain = new DownloadingClojureToolChain(getProject().getConfigurations(), getProject().getDependencies());
     }
 
     // @Input
     public ClojurePlatform getPlatform() {
-      return platform;
+        return platform;
     }
 
     public void setPlatform(ClojurePlatform platform) {
-      this.platform = platform;
+        this.platform = platform;
     }
 
     @OutputDirectory
@@ -55,14 +56,14 @@ public class PlatformClojureCompile extends SourceTask {
 
     @TaskAction
     public void compile() {
-      Classpath clojure = toolChain.getClojure(platform);
-      getProject().javaexec(spec -> {
-        spec.classpath(clojure.getFiles());
-        spec.classpath(classpath);
-        spec.classpath(destinationDir);
-        spec.setMain("clojure.main");
-        spec.args("--main", "org.graclj.tools.clojure");
-        spec.args(destinationDir);
-      });
+        Classpath clojure = toolChain.getClojure(platform);
+        getProject().javaexec(spec -> {
+            spec.classpath(clojure.getFiles());
+            spec.classpath(classpath);
+            spec.classpath(destinationDir);
+            spec.setMain("clojure.main");
+            spec.args("--main", "org.graclj.tools.clojure");
+            spec.args(destinationDir);
+        });
     }
 }

@@ -71,12 +71,12 @@ apply plugin: MyRules
             .build()
         then: 'the expected tasks were executed'
         result.tasks*.path == [
-                ':compileMainJarMainClojure',
-                ':createMainJar',
-                ':mainJar',
-                ':assemble',
-                ':check',
-                ':build'
+            ':compileMainJarMainClojure',
+            ':createMainJar',
+            ':mainJar',
+            ':assemble',
+            ':check',
+            ':build'
         ]
     }
 }

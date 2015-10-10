@@ -1,36 +1,36 @@
 plugins {
-  id 'java'
-  id 'maven-publish'
+    id 'java'
+    id 'maven-publish'
 }
 
 group = 'org.graclj'
 version = '0.1.0-SNAPSHOT'
 
 repositories {
-  jcenter()
+    jcenter()
+}
+
+sourceSets.main {
+    resources.srcDir 'src/main/clojure'
 }
 
 dependencies {
-  compile 'org.clojure:clojure:1.7.0'
-}
-
-jar {
-  from 'src/main/clojure'
+    compile 'org.clojure:clojure:1.7.0'
 }
 
 publishing {
-  publications {
-      main(MavenPublication) {
-          from components.java
-      }
-  }
-  repositories {
-    mavenLocal()
-  }
+    publications {
+        main(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 task sample(type: JavaExec) {
-  classpath jar
-  classpath configurations.compile
-  main = 'org.graclj.tools.clojure.Compiler'
+    classpath jar
+    classpath configurations.compile
+    main = 'org.graclj.tools.clojure.Compiler'
 }
