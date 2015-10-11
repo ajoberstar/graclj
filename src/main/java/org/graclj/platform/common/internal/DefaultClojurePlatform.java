@@ -10,11 +10,11 @@ public class DefaultClojurePlatform implements ClojurePlatform {
     }
 
     public String getDisplayName() {
-        return String.format("Clojure Platform (Clojure %s)", version);
+        return String.format("Clojure %s", version);
     }
 
     public String getName() {
-        return String.format("ClojurePlatform%s", version);
+        return String.format("cljc%s", version);
     }
 
     public String getClojureVersion() {

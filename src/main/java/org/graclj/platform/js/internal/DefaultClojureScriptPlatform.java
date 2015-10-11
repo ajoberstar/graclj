@@ -19,12 +19,12 @@ public class DefaultClojureScriptPlatform implements ClojureScriptPlatform {
 
     @Override
     public String getDisplayName() {
-        return String.format("ClojureScript Platform (ClojureScript %s)", version);
+        return String.format("ClojureScript %s", version);
     }
 
     @Override
     public String getName() {
-        return String.format("ClojureScriptPlatform%s", version);
+        return String.format("cljs%s", version);
     }
 
     @Override

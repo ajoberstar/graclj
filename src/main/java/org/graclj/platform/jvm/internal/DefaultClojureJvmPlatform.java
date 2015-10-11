@@ -22,12 +22,12 @@ public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
 
     @Override
     public String getDisplayName() {
-        return String.format("Clojure JVM Platform (Clojure JVM %s)", version);
+        return String.format("Clojure JVM %s", version);
     }
 
     @Override
     public String getName() {
-        return String.format("ClojureJvmPlatform%s", version);
+        return String.format("clojure%s", version);
     }
 
     @Override
