@@ -2,26 +2,49 @@
 
 Notes intended as feedback to Gradle devs about experience with new model plugins.
 
+Sorry for the wall of text...
+
 ## General
 
-- Lack of comments in the vast majority of the code makes it very difficult to understand.
-    - There's no way to get any context for how or why certain classes/interfaces are used
-      without literally reading all of the code.
-    - Pervasive use of empty interfaces that extend other empty interfaces is also confusing.
-      Hard to tell what those are meant to provide (if anything) for my code.
-- Is there any reason (besides backwards-compatibility) that the name "main" is still a special-case?
-    - For example, compileJava would be compileMainJava without specializing "main".
-- For a user, there's a good split between internal/public features. For plugin authors, it's way out of
-  balance. 3rd-party plugins are essentially second-class due to the vast amount of internals that the
-  first-party plugins depend on:
-    - Daemon infrastructure
-    - Compiler infrastructure
-    - ServiceRegistry (?)
-    - PlatformResolver
-    - ToolChain/ToolProvider
-- Not understanding how to compose different languages.
-- Crazy tedious to write all of these impls.
+My adventures so far on the new Clojure plugin have refreshed some pain points I've
+frequently had with Gradle as a plugin author. Some of my examples here are specific
+to the model plugins, which I understand are very much a work-in-progress, but these
+points have been true in the old-style plugins for years. This is mainly apparent when
+trying to build a plugin that you want to look and feel like a core plugin (e.g.
+language plugins).
 
+- Poor documentation (at least for plugin authors). In short, we're forced to read the
+  how (almost all of it), to understand the what or the why.
+  - User guide docs for plugin authoring is only geared towards simple use cases, such
+    as companies applying common configuration.
+  - Plugin-oriented APIs and base plugins have no documented contract. You have to
+    read the source to understand what they provide.
+  - The source typically has no comments, leaving the reader to discover any
+    context by reading all related source (including internals).
+- Way too much magic. I'm still hoping the model drives improvement here, but there's
+  little to no way to understand where (or when, from a lifecycle standpoint) features
+  come from.
+  - As one recent example, it took an entire afternoon of digging around to find out how
+    the project's extension container is visible in the model rules, but other containers
+    (configurations, dependencies) are not.
+- Overuse of internals in core plugins. Not making core plugins live by the public APIs
+  makes it effectively impossible to make a 3rd party plugin with a first-class experience
+  without using or duplicating the internals.
+  - Much of this is due to core abstractions being hidden in internals. Many benefits
+    highlighted in the recent release notes are inaccessible (via public APIs) to 3rd
+    party plugins.
+  - Some examples, with use cases for 3rd party plugins:
+    - Dependency resolution infrastructure -- supporting new repos or dependency types,
+      e.g. bower
+    - (Compiler)Daemon infrastructure -- any forked process that could be reused between
+      builds
+    - Compiler infrastructure -- language plugins
+
+I'd like to see Gradle get to the point where it isn't just a polyglot build system, but
+one that is seriously spoken of as a competitor within each language's community (e.g.
+grunt/gulp vs Gradle for JS or boot/lein vs Gradle for Clojure). Achieving this is largely
+predicated on the community bearing that burden. With stronger public APIs, improvements
+you make to the internals will benefit everyone instead of just the core plugins.
 
 ## Model
 
