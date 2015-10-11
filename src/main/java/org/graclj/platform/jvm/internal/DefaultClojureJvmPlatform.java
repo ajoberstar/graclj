@@ -4,7 +4,12 @@ import org.graclj.platform.common.ClojurePlatform;
 import org.graclj.platform.common.internal.DefaultClojurePlatform;
 import org.graclj.platform.jvm.ClojureJvmPlatform;
 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
+    private static final Pattern NAME_PATTERN = Pattern.compile("^clj(\\d+)\\.(\\d+)\\.(\\d+)(-.+)?$");
     private final ClojurePlatform clojurePlatform;
     private final String version;
 
@@ -24,7 +29,7 @@ public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
 
     @Override
     public String getName() {
-        return String.format("clojure%s", version);
+        return String.format("clj%s", version);
     }
 
     @Override
@@ -37,5 +42,17 @@ public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
         return version;
     }
 
-
+    public static Optional<DefaultClojureJvmPlatform> parse(String name) {
+        Matcher matcher = NAME_PATTERN.matcher(name);
+        if (matcher.find()) {
+            return Optional.of(new DefaultClojureJvmPlatform(
+                Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2)),
+                Integer.parseInt(matcher.group(3)),
+                matcher.group(4)
+            ));
+        } else {
+            return Optional.empty();
+        }
+    }
 }
