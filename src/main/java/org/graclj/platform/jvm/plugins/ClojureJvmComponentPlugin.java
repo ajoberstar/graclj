@@ -13,7 +13,7 @@ import org.gradle.model.RuleSource;
 import org.gradle.platform.base.ComponentType;
 import org.gradle.platform.base.ComponentTypeBuilder;
 
-public class ClojureJvmPlatformPlugin implements Plugin<Project> {
+public class ClojureJvmComponentPlugin implements Plugin<Project> {
 
     public void apply(Project project) {
         project.getPluginManager().apply(GracljInternalPlugin.class);
@@ -26,9 +26,9 @@ public class ClojureJvmPlatformPlugin implements Plugin<Project> {
             return new DefaultClojureJvmToolChainRegistry(dependencies);
         }
 
-        @ComponentType
-        void register(ComponentTypeBuilder<ClojureJvmLibrarySpec> builder) {
-            builder.defaultImplementation(DefaultClojureJvmLibrarySpec.class);
-        }
+//        @ComponentType
+//        void register(ComponentTypeBuilder<ClojureJvmLibrarySpec> builder) {
+//            builder.defaultImplementation(DefaultClojureJvmLibrarySpec.class);
+//        }
     }
 }

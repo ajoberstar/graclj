@@ -6,10 +6,9 @@ import org.graclj.language.jvm.ClojureJvmSourceSet;
 import org.graclj.language.jvm.internal.DefaultClojureJvmSourceSet;
 import org.graclj.language.jvm.tasks.ClojureJvmCompile;
 import org.graclj.platform.jvm.internal.DefaultClojureJvmPlatform;
-import org.graclj.platform.jvm.plugins.ClojureJvmPlatformPlugin;
+import org.graclj.platform.jvm.plugins.ClojureJvmComponentPlugin;
 import org.graclj.platform.jvm.toolchain.ClojureJvmToolChainRegistry;
 import org.gradle.api.*;
-import org.gradle.api.tasks.TaskContainer;
 import org.gradle.internal.service.ServiceRegistry;
 import org.gradle.jvm.JvmBinarySpec;
 import org.gradle.jvm.JvmByteCode;
@@ -34,7 +33,7 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
     public void apply(Project project) {
         project.getPluginManager().apply(ComponentModelBasePlugin.class);
         project.getPluginManager().apply(JvmResourcesPlugin.class);
-        project.getPluginManager().apply(ClojureJvmPlatformPlugin.class);
+        project.getPluginManager().apply(ClojureJvmComponentPlugin.class);
     }
 
     @DontUnderstand("How does this get applied? It's not part of the plugin apply method.")
@@ -147,7 +146,7 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
                     ClojureJvmSourceSet sourceSet = (ClojureJvmSourceSet) languageSourceSet;
 
                     // TODO: How do I input the platform elsewhere?
-                    compile.setPlatform(new DefaultClojureJvmPlatform(1, 7, 0, null, new DefaultJavaPlatform(JavaVersion.current())));
+                    compile.setPlatform(new DefaultClojureJvmPlatform(1, 7, 0, null));
 
                     compile.setDescription(String.format("AOT compiles %s", sourceSet));
                     compile.setSource(sourceSet.getSource());

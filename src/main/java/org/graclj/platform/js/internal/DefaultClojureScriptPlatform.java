@@ -33,7 +33,7 @@ public class DefaultClojureScriptPlatform implements ClojureScriptPlatform {
     }
 
     @Override
-    public String getClojureScriptVersion() {
+    public String getVersion() {
         return version;
     }
 

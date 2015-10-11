@@ -1,10 +1,8 @@
 package org.graclj.platform.js;
 
+import org.graclj.platform.GracljPlatform;
 import org.graclj.platform.common.ClojurePlatform;
-import org.gradle.platform.base.Platform;
 
-public interface ClojureScriptPlatform extends Platform {
+public interface ClojureScriptPlatform extends GracljPlatform {
     ClojurePlatform getClojurePlatform();
-
-    String getClojureScriptVersion();
 }

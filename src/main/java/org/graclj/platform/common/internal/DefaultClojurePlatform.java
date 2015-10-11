@@ -17,7 +17,7 @@ public class DefaultClojurePlatform implements ClojurePlatform {
         return String.format("cljc%s", version);
     }
 
-    public String getClojureVersion() {
+    public String getVersion() {
         return version;
     }
 }

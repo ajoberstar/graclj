@@ -3,16 +3,13 @@ package org.graclj.platform.jvm.internal;
 import org.graclj.platform.common.ClojurePlatform;
 import org.graclj.platform.common.internal.DefaultClojurePlatform;
 import org.graclj.platform.jvm.ClojureJvmPlatform;
-import org.gradle.jvm.platform.JavaPlatform;
 
 public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
     private final ClojurePlatform clojurePlatform;
-    private final JavaPlatform javaPlatform;
     private final String version;
 
-    public DefaultClojureJvmPlatform(int majorVersion, int minorVersion, int patchVersion, String preReleaseVersion, JavaPlatform javaPlatform) {
+    public DefaultClojureJvmPlatform(int majorVersion, int minorVersion, int patchVersion, String preReleaseVersion) {
         this.clojurePlatform = new DefaultClojurePlatform(majorVersion, minorVersion);
-        this.javaPlatform = javaPlatform;
         if (preReleaseVersion == null) {
             this.version = String.format("%s.%s.%s", majorVersion, minorVersion, patchVersion);
         } else {
@@ -36,12 +33,7 @@ public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
     }
 
     @Override
-    public JavaPlatform getJavaPlatform() {
-        return javaPlatform;
-    }
-
-    @Override
-    public String getClojureJvmVersion() {
+    public String getVersion() {
         return version;
     }
 
