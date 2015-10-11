@@ -3,12 +3,15 @@ package org.graclj.platform.jvm.plugins;
 import org.graclj.internal.DependencyExtension;
 import org.graclj.internal.DontUnderstand;
 import org.graclj.internal.plugins.GracljInternalPlugin;
+import org.graclj.platform.jvm.ClojureJvmLibrarySpec;
 import org.graclj.platform.jvm.internal.toolchain.DefaultClojureJvmToolChainRegistry;
 import org.graclj.platform.jvm.toolchain.ClojureJvmToolChainRegistry;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.model.Model;
 import org.gradle.model.RuleSource;
+import org.gradle.platform.base.ComponentType;
+import org.gradle.platform.base.ComponentTypeBuilder;
 
 public class ClojureJvmPlatformPlugin implements Plugin<Project> {
 
@@ -21,6 +24,11 @@ public class ClojureJvmPlatformPlugin implements Plugin<Project> {
         @Model
         ClojureJvmToolChainRegistry clojureToolChain(DependencyExtension dependencies) {
             return new DefaultClojureJvmToolChainRegistry(dependencies);
+        }
+
+        @ComponentType
+        void register(ComponentTypeBuilder<ClojureJvmLibrarySpec> builder) {
+            builder.defaultImplementation(DefaultClojureJvmLibrarySpec.class);
         }
     }
 }

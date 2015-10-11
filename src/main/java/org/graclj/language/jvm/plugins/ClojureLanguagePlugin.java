@@ -22,10 +22,7 @@ import org.gradle.language.base.internal.registry.LanguageTransformContainer;
 import org.gradle.language.base.plugins.ComponentModelBasePlugin;
 import org.gradle.language.jvm.plugins.JvmResourcesPlugin;
 import org.gradle.language.jvm.tasks.ProcessResources;
-import org.gradle.model.Finalize;
-import org.gradle.model.ModelSet;
-import org.gradle.model.Mutate;
-import org.gradle.model.RuleSource;
+import org.gradle.model.*;
 import org.gradle.platform.base.BinarySpec;
 import org.gradle.platform.base.LanguageType;
 import org.gradle.platform.base.LanguageTypeBuilder;
@@ -56,8 +53,8 @@ public class ClojureLanguagePlugin implements Plugin<Project> {
         }
 
         @Finalize
-        void injectToolChainToCompile(TaskContainer tasks, ClojureJvmToolChainRegistry toolChainRegistry) {
-            tasks.withType(ClojureJvmCompile.class, task -> task.setToolChainRegistry(toolChainRegistry));
+        void injectToolChainToCompile(ModelMap<ClojureJvmCompile> tasks, ClojureJvmToolChainRegistry toolChainRegistry) {
+            tasks.forEach(task -> task.setToolChainRegistry(toolChainRegistry));
         }
     }
 

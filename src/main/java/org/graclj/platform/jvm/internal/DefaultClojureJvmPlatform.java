@@ -2,7 +2,6 @@ package org.graclj.platform.jvm.internal;
 
 import org.graclj.platform.common.ClojurePlatform;
 import org.graclj.platform.common.internal.DefaultClojurePlatform;
-import org.graclj.platform.js.ClojureScriptPlatform;
 import org.graclj.platform.jvm.ClojureJvmPlatform;
 import org.gradle.jvm.platform.JavaPlatform;
 
