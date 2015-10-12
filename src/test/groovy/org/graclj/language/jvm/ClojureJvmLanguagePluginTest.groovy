@@ -40,18 +40,18 @@ model {
     }
 }
 
-//class MyRules extends RuleSource {
-//    @Mutate
-//    void createTask(ModelMap<Task> tasks, @Path('tasks.mainJar') Task jar) {
-//        tasks.create('clojureWorks', JavaExec) {
-//            classpath jar
-//            main = 'sample.yay'
-//            args 'does', 'it', 'work'
-//        }
-//    }
-//}
+class MyRules extends RuleSource {
+    @Mutate
+    void createTask(ModelMap<Task> tasks, @Path('tasks.mainJar') Task jar) {
+        tasks.create('clojureWorks', JavaExec) {
+            classpath jar
+            main = 'sample.yay'
+            args 'does', 'it', 'work'
+        }
+    }
+}
 
-//apply plugin: MyRules
+apply plugin: MyRules
 """
         projectDir.newFolder('src', 'main', 'clojure', 'sample')
         projectDir.newFile('src/main/clojure/sample/yay.jvm') << """
@@ -68,16 +68,18 @@ model {
         when: 'the build task is executed'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('build', '--stacktrace')
+            .withArguments('build', 'clojureWorks', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'
         result.tasks*.path == [
-            ':compileMainJarMainClojure',
+            ':compileClojureToMainJar',
+            ':copyClojureToMainJar',
             ':createMainJar',
             ':mainJar',
             ':assemble',
             ':check',
-            ':build'
+            ':build',
+            ':clojureWorks'
         ]
     }
 }

@@ -41,23 +41,22 @@ public class ClojureJvmLanguagePlugin implements Plugin<Project> {
         }
 
         @BinaryTasks
-        void createCopyTask(ModelMap<ProcessResources> tasks, ClojureJvmBinarySpec binary) {
-            binary.getSources().withType(ClojureJvmSourceSet.class, sourceSet -> {
+        void createCopyTask(ModelMap<Task> tasks, ClojureJvmBinarySpec binary) {
+            binary.getInputs().withType(ClojureJvmSourceSet.class, sourceSet -> {
                 String taskName = String.format("copy%sTo%s", Util.capitalize(sourceSet.getName()), Util.capitalize(binary.getName()));
-                tasks.create(taskName, resources -> {
+                tasks.create(taskName, ProcessResources.class, resources -> {
                     resources.setDescription(String.format("Copies source for %s", sourceSet));
                     resources.from(sourceSet.getSource());
                     resources.setDestinationDir(binary.getClassesDir());
-                    binary.getBuildTask().dependsOn(resources);
                 });
             });
         }
 
         @BinaryTasks
-        void createCompileTask(ModelMap<ClojureJvmCompile> tasks, ClojureJvmBinarySpec binary, ClojureJvmToolChainRegistry toolChainRegistry) {
-            binary.getSources().withType(ClojureJvmSourceSet.class, sourceSet -> {
-                String taskName = String.format("copy%sTo%s", Util.capitalize(sourceSet.getName()), Util.capitalize(binary.getName()));
-                tasks.create(taskName, compile -> {
+        void createCompileTask(ModelMap<Task> tasks, ClojureJvmBinarySpec binary, ClojureJvmToolChainRegistry toolChainRegistry) {
+            binary.getInputs().withType(ClojureJvmSourceSet.class, sourceSet -> {
+                String taskName = String.format("compile%sTo%s", Util.capitalize(sourceSet.getName()), Util.capitalize(binary.getName()));
+                tasks.create(taskName, ClojureJvmCompile.class, compile -> {
                     compile.setDescription(String.format("AOT compiles %s", sourceSet));
                     // TODO: How do I input the platform elsewhere?
                     compile.setPlatform(new DefaultClojureJvmPlatform(1, 7, 0, null));
@@ -65,7 +64,6 @@ public class ClojureJvmLanguagePlugin implements Plugin<Project> {
                     compile.setSource(sourceSet.getSource());
                     compile.setClasspath(sourceSet.getCompileClasspath().getFiles());
                     compile.setDestinationDir(binary.getClassesDir());
-                    binary.getBuildTask().dependsOn(compile);
                 });
             });
         }
