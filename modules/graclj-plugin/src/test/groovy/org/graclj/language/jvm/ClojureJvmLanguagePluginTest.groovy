@@ -32,19 +32,21 @@ repositories {
   mavenLocal()
 }
 
-import org.graclj.platform.jvm.*
-
 model {
     components {
-        main(ClojureJvmLibrarySpec)
+        main(JvmLibrarySpec)
     }
 }
 
+import org.graclj.internal.GracljInternal
+
 class MyRules extends RuleSource {
     @Mutate
-    void createTask(ModelMap<Task> tasks, @Path('tasks.createMainJar') Task jar) {
+    void createTask(ModelMap<Task> tasks, @Path('binaries.mainJar') JarBinarySpec jar, GracljInternal internals) {
         tasks.create('clojureWorks', JavaExec) {
-            classpath jar
+            classpath jar.getJarFile()
+            classpath internals.resolve('org.clojure:clojure:1.7.0').getFiles()
+
             main = 'sample.yay'
             args 'does', 'it', 'work'
         }
@@ -53,8 +55,8 @@ class MyRules extends RuleSource {
 
 apply plugin: MyRules
 """
-        projectDir.newFolder('src', 'main', 'clj', 'sample')
-        projectDir.newFile('src/main/clj/sample/yay.clj') << """
+        projectDir.newFolder('src', 'main', 'clojure', 'sample')
+        projectDir.newFile('src/main/clojure/sample/yay.clj') << """
 (ns sample.yay
     (:require [clojure.string :as str])
     (:gen-class))
@@ -69,13 +71,15 @@ apply plugin: MyRules
         when: 'the build task is executed'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('components', 'build', 'clojureWorks', '--stacktrace')
+            .withArguments('build', 'clojureWorks', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'
         result.tasks*.path == [
-            ':compileClojureToMainJar',
-            ':copyClojureToMainJar',
+            ':compileMainJarMainClojure',
+            ':copyMainJarMainClojure',
             ':createMainJar',
+            ':extractMainApiClasses',
+            ':createMainApiJar',
             ':mainJar',
             ':assemble',
             ':check',

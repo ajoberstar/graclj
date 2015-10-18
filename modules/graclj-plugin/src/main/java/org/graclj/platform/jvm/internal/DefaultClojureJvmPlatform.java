@@ -1,7 +1,5 @@
 package org.graclj.platform.jvm.internal;
 
-import org.graclj.platform.common.ClojurePlatform;
-import org.graclj.platform.common.internal.DefaultClojurePlatform;
 import org.graclj.platform.jvm.ClojureJvmPlatform;
 
 import java.util.Optional;
@@ -10,11 +8,9 @@ import java.util.regex.Pattern;
 
 public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
     private static final Pattern NAME_PATTERN = Pattern.compile("^clj(\\d+)\\.(\\d+)\\.(\\d+)(-.+)?$");
-    private final ClojurePlatform clojurePlatform;
     private final String version;
 
     public DefaultClojureJvmPlatform(int majorVersion, int minorVersion, int patchVersion, String preReleaseVersion) {
-        this.clojurePlatform = new DefaultClojurePlatform(majorVersion, minorVersion);
         if (preReleaseVersion == null) {
             this.version = String.format("%s.%s.%s", majorVersion, minorVersion, patchVersion);
         } else {
@@ -29,12 +25,7 @@ public class DefaultClojureJvmPlatform implements ClojureJvmPlatform {
 
     @Override
     public String getName() {
-        return String.format("clj%s", version);
-    }
-
-    @Override
-    public ClojurePlatform getClojurePlatform() {
-        return clojurePlatform;
+        return String.format("clj-%s", version);
     }
 
     @Override

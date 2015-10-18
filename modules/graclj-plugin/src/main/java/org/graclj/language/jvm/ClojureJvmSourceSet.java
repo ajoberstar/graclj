@@ -1,8 +1,8 @@
 package org.graclj.language.jvm;
 
-import org.gradle.jvm.Classpath;
 import org.gradle.language.base.LanguageSourceSet;
+import org.gradle.language.base.internal.DependentSourceSetInternal;
 
-public interface ClojureJvmSourceSet extends LanguageSourceSet {
-    Classpath getCompileClasspath();
+// TODO: Stop using internals. DependentSourceSet
+public interface ClojureJvmSourceSet extends LanguageSourceSet, DependentSourceSetInternal {
 }

@@ -4,6 +4,7 @@ import org.gradle.jvm.Classpath;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.TaskDependency;
 
+// TODO Get rid of this when public replacement available.
 public class BasicClasspath implements Classpath {
     private final FileCollection files;
 

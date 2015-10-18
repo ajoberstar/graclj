@@ -1,15 +1,15 @@
 package org.graclj.platform.jvm.internal.toolchain;
 
-import org.graclj.internal.DependencyExtension;
+import org.graclj.internal.GracljInternal;
 import org.graclj.platform.jvm.ClojureJvmPlatform;
 import org.graclj.platform.jvm.toolchain.ClojureJvmToolChain;
 import org.gradle.jvm.Classpath;
 
 public class DownloadingClojureJvmToolChain implements ClojureJvmToolChain {
     private final ClojureJvmPlatform platform;
-    private final DependencyExtension dependencies;
+    private final GracljInternal dependencies;
 
-    public DownloadingClojureJvmToolChain(ClojureJvmPlatform platform, DependencyExtension dependencies) {
+    public DownloadingClojureJvmToolChain(ClojureJvmPlatform platform, GracljInternal dependencies) {
         this.platform = platform;
         this.dependencies = dependencies;
     }
