@@ -9,7 +9,7 @@ import org.gradle.model.RuleSource;
 
 public class GracljInternalPlugin implements Plugin<Project> {
     public void apply(Project project) {
-        project.getExtensions().create("gracljInternalDependencies", DependencyExtension.class, project.getConfigurations(), project.getDependencies());
+        project.getExtensions().create("gracljInternalDependencies", DependencyExtension.class, project.getConfigurations(), project.getDependencies(), project.getBuildDir());
     }
 
     @SuppressWarnings("unused")

@@ -21,7 +21,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.graclj:graclj:+'
+        classpath 'org.graclj:graclj-plugin:+'
     }
 }
 
@@ -42,7 +42,7 @@ model {
 
 class MyRules extends RuleSource {
     @Mutate
-    void createTask(ModelMap<Task> tasks, @Path('tasks.mainJar') Task jar) {
+    void createTask(ModelMap<Task> tasks, @Path('tasks.createMainJar') Task jar) {
         tasks.create('clojureWorks', JavaExec) {
             classpath jar
             main = 'sample.yay'
@@ -53,10 +53,11 @@ class MyRules extends RuleSource {
 
 apply plugin: MyRules
 """
-        projectDir.newFolder('src', 'main', 'clojure', 'sample')
-        projectDir.newFile('src/main/clojure/sample/yay.jvm') << """
-(ns 'sample.yay'
-    (:require [clojure.string :as str]))
+        projectDir.newFolder('src', 'main', 'clj', 'sample')
+        projectDir.newFile('src/main/clj/sample/yay.clj') << """
+(ns sample.yay
+    (:require [clojure.string :as str])
+    (:gen-class))
 
 (defn my-sample [x] (str/reverse x))
 
@@ -68,7 +69,7 @@ apply plugin: MyRules
         when: 'the build task is executed'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('build', 'clojureWorks', '--stacktrace')
+            .withArguments('components', 'build', 'clojureWorks', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'
         result.tasks*.path == [

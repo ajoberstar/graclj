@@ -56,18 +56,27 @@ public class ClojureJvmCompile extends SourceTask {
     @TaskAction
     public void compile() {
         Classpath compiler = getToolChain().getCompiler();
+        getProject().copy(spec -> {
+            spec.from(getSource());
+            spec.into(getTemporaryDir());
+        });
+
         getProject().javaexec(spec -> {
             spec.classpath(compiler.getFiles());
-            spec.classpath(classpath);
+            spec.classpath(getClasspath());
 
             // Clojure compiler requires source dirs and class dirs to be on classpath
-            spec.classpath(source);
-            spec.classpath(destinationDir);
+            spec.classpath(getTemporaryDir());
+            spec.classpath(getDestinationDir());
 
             spec.setMain("clojure.main");
             spec.args("--main", "org.graclj.tools.clojure");
+
+            // Location to get source from
+            spec.args(getTemporaryDir());
+
             // Location to write class files out to
-            spec.args(destinationDir);
+            spec.args(getDestinationDir().getAbsolutePath());
         });
     }
 }

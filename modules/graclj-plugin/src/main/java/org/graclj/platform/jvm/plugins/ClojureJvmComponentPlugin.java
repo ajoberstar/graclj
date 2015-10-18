@@ -13,18 +13,33 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.jvm.tasks.Jar;
 import org.gradle.language.base.plugins.ComponentModelBasePlugin;
+import org.gradle.model.Defaults;
 import org.gradle.model.Model;
 import org.gradle.model.ModelMap;
 import org.gradle.model.RuleSource;
+import org.gradle.model.internal.registry.ModelRegistry;
+import org.gradle.model.internal.type.ModelType;
 import org.gradle.platform.base.*;
 
+import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 
 public class ClojureJvmComponentPlugin implements Plugin<Project> {
+    private final ModelRegistry modelRegistry;
+
+    @Inject
+    public ClojureJvmComponentPlugin(ModelRegistry modelRegistry) {
+        this.modelRegistry = modelRegistry;
+    }
+
 
     public void apply(Project project) {
         project.getPluginManager().apply(GracljInternalPlugin.class);
         project.getPluginManager().apply(ComponentModelBasePlugin.class);
+        modelRegistry.getRoot().applyToAllLinksTransitive(ModelType.of(ClojureJvmLibrarySpec.class), BinaryRules.class);
     }
 
     @SuppressWarnings("unused")
@@ -36,26 +51,25 @@ public class ClojureJvmComponentPlugin implements Plugin<Project> {
 
         @ComponentType
         void registerLibrary(ComponentTypeBuilder<ClojureJvmLibrarySpec> builder) {
+            System.out.println("registerLibrary");
             builder.defaultImplementation(DefaultClojureJvmLibrarySpec.class);
         }
 
         @BinaryType
         void registerBinary(BinaryTypeBuilder<ClojureJvmBinarySpec> builder) {
+            System.out.println("registerBinary");
             builder.defaultImplementation(DefaultClojureJvmBinarySpec.class);
         }
 
         @ComponentBinaries
         void createBinariesForLibrary(ModelMap<ClojureJvmBinarySpec> binaries, ClojureJvmLibrarySpec component) {
-            binaries.create(component.getName() + "Jar", binary -> {
-                String classesPath = String.format("build/%s/%s/classes", component.getName(), binary.getName());
-                String jarPath = String.format("build/%s/%s.jar", component.getName(), binary.getName());
-                binary.setClassesDir(new File(classesPath));
-                binary.setJarFile(new File(jarPath));
-            });
+            System.out.println("createBinariesForLibrary");
+            binaries.create(component.getName() + "Jar");
         }
 
         @BinaryTasks
         void createBinaryTasksForJar(ModelMap<Jar> tasks, ClojureJvmBinarySpec binary) {
+            System.out.println("createBinaryTasksForJar");
             String taskName = "create" + Util.capitalize(binary.getName());
             tasks.create(taskName, Jar.class, jar -> {
                 jar.setDescription("Creates the binary file for " + binary);
