@@ -3,13 +3,6 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'org.graclj'
-version = '0.1.0-SNAPSHOT'
-
-repositories {
-    jcenter()
-}
-
 sourceSets.main {
     resources.srcDir 'src/main/clojure'
 }
@@ -23,9 +16,6 @@ publishing {
         main(MavenPublication) {
             from components.java
         }
-    }
-    repositories {
-        mavenLocal()
     }
 }
 

@@ -1,1 +1,2 @@
 include 'modules:graclj-tools'
+include 'modules:graclj-plugin'
