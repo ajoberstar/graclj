@@ -78,7 +78,6 @@ apply plugin: MyRules
             ':compileMainJarMainClojure',
             ':copyMainJarMainClojure',
             ':createMainJar',
-            ':extractMainApiClasses',
             ':createMainApiJar',
             ':mainJar',
             ':assemble',
