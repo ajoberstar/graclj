@@ -42,7 +42,7 @@ import org.graclj.internal.GracljInternal
 
 class MyRules extends RuleSource {
     @Mutate
-    void createTask(ModelMap<Task> tasks, @Path('binaries.mainJar') JarBinarySpec jar, GracljInternal internals) {
+    void createTask(ModelMap<Task> tasks, @Path('binaries.mainAotJar') JarBinarySpec jar, GracljInternal internals) {
         tasks.create('clojureWorks', JavaExec) {
             classpath jar.getJarFile()
             classpath internals.resolve('org.clojure:clojure:1.7.0').getFiles()
@@ -71,11 +71,16 @@ apply plugin: MyRules
         when: 'the build task is executed'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('build', 'clojureWorks', '--stacktrace')
+            .withArguments('components', 'build', 'clojureWorks', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'
         result.tasks*.path == [
-            ':compileMainJarMainClojure',
+            ':components',
+            ':compileMainAotJarMainClojure',
+            ':copyMainAotJarMainClojure',
+            ':createMainAotJar',
+            ':createMainAotApiJar',
+            ':mainAotJar',
             ':copyMainJarMainClojure',
             ':createMainJar',
             ':createMainApiJar',
