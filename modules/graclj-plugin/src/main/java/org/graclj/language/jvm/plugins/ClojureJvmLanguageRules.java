@@ -3,7 +3,7 @@ package org.graclj.language.jvm.plugins;
 import org.graclj.language.jvm.ClojureJvmSourceSet;
 import org.graclj.language.jvm.internal.DefaultClojureJvmSourceSet;
 import org.graclj.language.jvm.tasks.ClojureJvmCompile;
-import org.graclj.platform.jvm.ClojureJarBinarySpec;
+import org.graclj.platform.jvm.ClojureAotJarBinarySpec;
 import org.graclj.platform.jvm.internal.DefaultClojureJvmPlatform;
 import org.graclj.platform.jvm.toolchain.ClojureJvmToolChainRegistry;
 import org.gradle.api.DefaultTask;
@@ -182,7 +182,7 @@ public class ClojureJvmLanguageRules extends RuleSource {
 
         @Override
         public boolean applyToBinary(BinarySpec binary) {
-            return binary instanceof ClojureJarBinarySpec;
+            return binary instanceof ClojureAotJarBinarySpec;
         }
     }
 }
