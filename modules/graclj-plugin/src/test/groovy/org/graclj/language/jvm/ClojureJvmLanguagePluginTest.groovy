@@ -26,6 +26,7 @@ buildscript {
 }
 
 apply plugin: 'org.graclj.clojure-lang'
+apply plugin: 'maven-publish'
 
 repositories {
   jcenter()
@@ -35,6 +36,43 @@ repositories {
 model {
     components {
         main(JvmLibrarySpec)
+    }
+}
+
+publishing {
+    publications {
+        main(MavenPublication) {
+            groupId = 'org.graclj.sample'
+            version = '0.1.0'
+            artifact(tasks.createMainJar)
+            artifact(tasks.createMainAotJar) {
+                classifier = 'aot'
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'project'
+            url = file('build/repo')
+        }
+    }
+}
+
+import java.nio.file.Files
+import java.util.stream.Collectors
+
+task verifyPublish {
+    doLast {
+        def repoDir = file('build/repo').toPath()
+        def files = Files.walk(repoDir)
+            .filter { path -> path.getFileName().toString().endsWith('.jar') }
+            .collect(Collectors.toSet())
+        def expected = [
+            repoDir.resolve("org/graclj/sample/\${project.name}/0.1.0/\${project.name}-0.1.0.jar"),
+            repoDir.resolve("org/graclj/sample/\${project.name}/0.1.0/\${project.name}-0.1.0-aot.jar")
+        ] as Set
+
+        assert files == expected
     }
 }
 
@@ -71,10 +109,11 @@ apply plugin: MyRules
         when: 'the build task is executed'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('components', 'build', 'clojureWorks', '--stacktrace')
+            .withArguments('clean', 'components', 'build', 'clojureWorks', 'publishMainPublicationToProjectRepository', 'verifyPublish', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'
         result.tasks*.path == [
+            ':clean',
             ':components',
             ':compileMainAotJarMainClojure',
             ':copyMainAotJarMainClojure',
@@ -88,7 +127,10 @@ apply plugin: MyRules
             ':assemble',
             ':check',
             ':build',
-            ':clojureWorks'
+            ':clojureWorks',
+            ':generatePomFileForMainPublication',
+            ':publishMainPublicationToProjectRepository',
+            ':verifyPublish'
         ]
     }
 }
