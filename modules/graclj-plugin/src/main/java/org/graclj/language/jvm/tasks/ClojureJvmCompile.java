@@ -4,11 +4,10 @@ import org.graclj.platform.jvm.ClojureJvmPlatform;
 import org.graclj.platform.jvm.toolchain.ClojureJvmToolChain;
 import org.graclj.platform.jvm.toolchain.ClojureJvmToolChainRegistry;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.SourceTask;
-import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.jvm.Classpath;
+import org.gradle.api.tasks.SourceTask;
+import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
 

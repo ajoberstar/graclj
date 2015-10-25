@@ -7,6 +7,7 @@ import org.gradle.jvm.plugins.JvmComponentPlugin;
 import org.gradle.language.base.plugins.ComponentModelBasePlugin;
 
 public class ClojureJvmComponentPlugin implements Plugin<Project> {
+    @Override
     public void apply(Project project) {
         project.getPluginManager().apply(GracljInternalPlugin.class);
 

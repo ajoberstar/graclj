@@ -8,6 +8,7 @@ import org.gradle.model.Model;
 import org.gradle.model.RuleSource;
 
 public class GracljInternalPlugin implements Plugin<Project> {
+    @Override
     public void apply(Project project) {
         project.getExtensions().create("gracljInternal", GracljInternal.class, project.getConfigurations(), project.getDependencies());
     }
