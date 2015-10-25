@@ -26,6 +26,7 @@ buildscript {
 }
 
 apply plugin: 'org.graclj.clojure-lang'
+apply plugin: 'org.graclj.clojure-component'
 apply plugin: 'maven-publish'
 
 repositories {
