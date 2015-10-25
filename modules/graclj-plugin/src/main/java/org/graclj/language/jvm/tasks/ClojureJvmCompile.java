@@ -55,7 +55,7 @@ public class ClojureJvmCompile extends SourceTask {
 
     @TaskAction
     public void compile() {
-        Classpath compiler = getToolChain().getCompiler();
+        FileCollection compiler = getToolChain().getCompiler();
         getProject().copy(spec -> {
             spec.from(getSource());
             spec.into(getTemporaryDir());
