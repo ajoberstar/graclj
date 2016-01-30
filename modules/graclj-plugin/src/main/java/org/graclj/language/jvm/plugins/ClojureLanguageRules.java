@@ -1,6 +1,6 @@
 package org.graclj.language.jvm.plugins;
 
-import org.graclj.language.jvm.ClojureJvmSourceSet;
+import org.graclj.language.jvm.ClojureSourceSet;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Task;
 import org.gradle.internal.service.ServiceRegistry;
@@ -11,7 +11,6 @@ import org.gradle.language.base.LanguageSourceSet;
 import org.gradle.language.base.internal.SourceTransformTaskConfig;
 import org.gradle.language.base.internal.registry.LanguageTransform;
 import org.gradle.language.base.internal.registry.LanguageTransformContainer;
-import org.gradle.language.jvm.JvmResourceSet;
 import org.gradle.language.jvm.tasks.ProcessResources;
 import org.gradle.model.Mutate;
 import org.gradle.model.RuleSource;
@@ -24,9 +23,9 @@ import java.util.Map;
 
 import static org.gradle.util.CollectionUtils.first;
 
-public class ClojureJvmLanguageRules extends RuleSource {
+public class ClojureLanguageRules extends RuleSource {
     @LanguageType
-    public void registerLanguage(LanguageTypeBuilder<ClojureJvmSourceSet> builder) {
+    public void registerLanguage(LanguageTypeBuilder<ClojureSourceSet> builder) {
         builder.setLanguageName("clojure");
     }
 
@@ -38,9 +37,9 @@ public class ClojureJvmLanguageRules extends RuleSource {
 
     // TODO stop using internals
     // copied from jvmresourcesplugin
-    private static class Clojure implements LanguageTransform<ClojureJvmSourceSet, JvmResources> {
-        public Class<ClojureJvmSourceSet> getSourceSetType() {
-            return ClojureJvmSourceSet.class;
+    private static class Clojure implements LanguageTransform<ClojureSourceSet, JvmResources> {
+        public Class<ClojureSourceSet> getSourceSetType() {
+            return ClojureSourceSet.class;
         }
 
         public Map<String, Class<?>> getBinaryTools() {
@@ -63,7 +62,7 @@ public class ClojureJvmLanguageRules extends RuleSource {
 
                 public void configureTask(Task task, BinarySpec binary, LanguageSourceSet sourceSet, ServiceRegistry serviceRegistry) {
                     ProcessResources resourcesTask = (ProcessResources) task;
-                    ClojureJvmSourceSet resourceSet = (ClojureJvmSourceSet) sourceSet;
+                    ClojureSourceSet resourceSet = (ClojureSourceSet) sourceSet;
                     resourcesTask.from(resourceSet.getSource());
 
                     // The first directory is the one created by JvmComponentPlugin.configureJvmBinaries()

@@ -7,7 +7,7 @@ import spock.lang.Specification
 
 import java.nio.file.Paths
 
-class ClojureJvmLanguagePluginTest extends Specification {
+class ClojureLanguagePluginTest extends Specification {
     private static final URI PLUGIN_REPO = Paths.get(System.properties['plugin.repo']).toUri()
 
     @Rule TemporaryFolder projectDir = new TemporaryFolder()

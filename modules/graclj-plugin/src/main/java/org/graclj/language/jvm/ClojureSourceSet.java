@@ -4,5 +4,5 @@ import org.gradle.language.base.LanguageSourceSet;
 import org.gradle.model.Managed;
 
 @Managed
-public interface ClojureJvmSourceSet extends LanguageSourceSet {
+public interface ClojureSourceSet extends LanguageSourceSet {
 }
