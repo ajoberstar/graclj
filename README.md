@@ -11,7 +11,7 @@ Clojure plugin for Gradle
 
 ## Background
 
-Gradle has had very low adoption in the Clojure community: 2% as of the [2014 State of Clojure](https://cognitect.wufoo.com/reports/state-of-clojure-2014-results/).
+Gradle has had very low adoption in the Clojure community: 2% as of the [2014 State of Clojure](https://cognitect.wufoo.com/reports/state-of-clojure-2014-results/) and [2015 State of Clojure](https://www.surveymonkey.com/results/SM-QKBJ2C5J/).
 Clojure support is currently provided by [Clojuresque](https://bitbucket.org/clojuresque/), however it's development has stagnated recently.
 
 Additionally, Gradle continues to evolve with the "foundation of Gradle 3.0" being built on the model space. Which promotes
