@@ -1,9 +1,10 @@
-package org.graclj.language.jvm
+package org.graclj.language.jvm.plugins
 
 import org.gradle.testkit.runner.GradleRunner
-import spock.lang.Specification
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
+import spock.lang.Specification
+
 import java.nio.file.Paths
 
 class ClojureJvmLanguagePluginTest extends Specification {
@@ -26,7 +27,7 @@ buildscript {
 }
 
 apply plugin: 'org.graclj.clojure-lang'
-apply plugin: 'org.graclj.clojure-component'
+apply plugin: 'jvm-component'
 apply plugin: 'maven-publish'
 
 repositories {
@@ -36,7 +37,11 @@ repositories {
 
 model {
     components {
-        main(JvmLibrarySpec)
+        main(JvmLibrarySpec) {
+            dependencies {
+                module 'org.clojure:clojure:1.8.0'
+            }
+        }
     }
 }
 
@@ -46,9 +51,6 @@ publishing {
             groupId = 'org.graclj.sample'
             version = '0.1.0'
             artifact(tasks.createMainJar)
-            artifact(tasks.createMainAotJar) {
-                classifier = 'aot'
-            }
         }
     }
     repositories {
@@ -70,7 +72,6 @@ task verifyPublish {
             .collect(Collectors.toSet())
         def expected = [
             repoDir.resolve("org/graclj/sample/\${project.name}/0.1.0/\${project.name}-0.1.0.jar"),
-            repoDir.resolve("org/graclj/sample/\${project.name}/0.1.0/\${project.name}-0.1.0-aot.jar")
         ] as Set
 
         assert files == expected
@@ -81,13 +82,13 @@ import org.graclj.internal.GracljInternal
 
 class MyRules extends RuleSource {
     @Mutate
-    void createTask(ModelMap<Task> tasks, @Path('binaries.mainAotJar') JarBinarySpec jar, GracljInternal internals) {
+    void createTask(ModelMap<Task> tasks, @Path('binaries.mainJar') JarBinarySpec jar, GracljInternal internal) {
         tasks.create('clojureWorks', JavaExec) {
             classpath jar.getJarFile()
-            classpath internals.resolve('org.clojure:clojure:1.7.0').getFiles()
+            classpath internal.resolve(jar.getLibrary().getDependencies())
 
-            main = 'sample.yay'
-            args 'does', 'it', 'work'
+            main = 'clojure.main'
+            args '--main', 'sample.yay', 'does', 'it', 'work'
         }
     }
 }
@@ -116,14 +117,9 @@ apply plugin: MyRules
         result.tasks*.path == [
             ':clean',
             ':components',
-            ':compileMainAotJarMainClojure',
-            ':copyMainAotJarMainClojure',
-            ':createMainAotJar',
-            ':createMainAotApiJar',
-            ':mainAotJar',
-            ':copyMainJarMainClojure',
+            ':processMainJarMainClojure',
             ':createMainJar',
-            ':createMainApiJar',
+            ':mainApiJar',
             ':mainJar',
             ':assemble',
             ':check',

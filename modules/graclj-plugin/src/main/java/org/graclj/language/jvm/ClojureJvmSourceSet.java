@@ -1,8 +1,8 @@
 package org.graclj.language.jvm;
 
 import org.gradle.language.base.LanguageSourceSet;
-import org.gradle.language.base.internal.DependentSourceSetInternal;
+import org.gradle.model.Managed;
 
-// TODO: Stop using internals. DependentSourceSet
-public interface ClojureJvmSourceSet extends LanguageSourceSet, DependentSourceSetInternal {
+@Managed
+public interface ClojureJvmSourceSet extends LanguageSourceSet {
 }
