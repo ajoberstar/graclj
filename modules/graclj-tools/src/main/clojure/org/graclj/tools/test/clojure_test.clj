@@ -1,10 +1,8 @@
 (ns org.graclj.tools.test.clojure-test
-  (:require [clojure.test :as test]
-            [clojure.stacktrace :as stack])
+  (:require [clojure.test :as test])
   (:import (java.lang.annotation Annotation)
            (org.junit.runner Description)
-           (org.junit.runner.notification Failure)
-           (junit.framework TestFailure)))
+           (org.junit.runner.notification Failure)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JUnit helpers
@@ -110,20 +108,16 @@
   :state tests)
 
 (defn -init [_]
-  (println (seq (.getURLs (ClassLoader/getSystemClassLoader))))
-  (println "In init method...")
   [[] (atom (scan-tests))])
 
 (defn -getDescription [this]
-  (println "In getDescription method...")
-  (let [suite (describe-suite "GracljFakeSuite")]
+  (let [suite (describe-suite "GracljParentSuite")]
     (doseq [test @(.tests this)]
       (.addChild (:description test)))
     (println suite)
     suite))
 
 (defn -run [this notifier]
-  (println "In run method....")
   (println @(.tests this))
   (let [test-vars (map :var @(.tests this))]
     (println test-vars)
@@ -131,7 +125,6 @@
        (test/test-vars test-vars))))
 
 (defn -filter [this desc-filter]
-  (println "In filter method...")
   (letfn [(run? [test] (->> test :description (.shouldRun desc-filter)))
           (trim [tests] (filter run? tests))]
     (swap! (.tests this) trim)))
