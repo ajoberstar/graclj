@@ -105,29 +105,27 @@
   :extends org.junit.runner.Runner
   :constructors {[Class] []}
   :init init
-  :state tests)
+  :state state)
 
-(defn -init [_]
-  [[] (atom (scan-tests))])
+(defn -init [clazz]
+  [[] (atom {:parent clazz :tests (scan-tests)})])
 
 (defn -getDescription [this]
-  (let [suite (describe-suite "GracljParentSuite")]
-    (doseq [test @(.tests this)]
+  (let [suite (describe-suite (-> this .state deref :parent str))]
+    (doseq [test (-> this .state deref :tests)]
       (.addChild (:description test)))
     (println suite)
     suite))
 
 (defn -run [this notifier]
-  (println @(.tests this))
-  (let [test-vars (map :var @(.tests this))]
-    (println test-vars)
+  (let [test-vars (map :var (-> this .state deref :tests))]
     (with-notifier notifier
        (test/test-vars test-vars))))
 
 (defn -filter [this desc-filter]
   (letfn [(run? [test] (->> test :description (.shouldRun desc-filter)))
           (trim [tests] (filter run? tests))]
-    (swap! (.tests this) trim)))
+    (swap! (.state this) update-in :tests trim)))
 
 (deftype ^{org.junit.runner.RunWith org.graclj.tools.test.ClojureTestRunner} GracljSuite [])
 
@@ -136,7 +134,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (test/deftest addition-works2
-         (test/is (= (+ 1 2) 3)))
+  (Thread/sleep 5000)
+  (test/is (= (+ 1 2) 3)))
 
 (test/deftest subtraction-fails2
-         (test/is (= (- 2 1) 2)))
+  (Thread/sleep 5000)
+  (test/is (= (- 2 1) 2)))
+
+(test/deftest multiplication-works2
+  (Thread/sleep 5000)
+  (test/is (= (* 1 2) 2))
+  (test/is (= (* 2 2) 4)))

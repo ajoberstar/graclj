@@ -38,10 +38,15 @@ task compileTools(type: JavaExec) {
     }
 }
 
+
+
 test {
     dependsOn compileTools
     classpath += files(tools)
     classpath += files('build/resources/test')
     testClassesDir = tools
+    testLogging {
+        events = ['started', 'passed', 'failed']
+    }
 }
 
