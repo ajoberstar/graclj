@@ -21,14 +21,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Report for scanning for test vars.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (def ^:dynamic *tests* nil)
 
 (defmulti scan-report :type)
 
 (defmethod scan-report :begin-test-var [m]
   (println m)
-  (let [test-var (:var m)
+  (let [test-var (-> m :var meta :old-var)
         description (describe-test test-var)
         test (->Test description test-var)]
     (swap! *tests* conj test)))
@@ -37,11 +36,18 @@
   (println m)
   nil)
 
+(defn suppress-test-var [real-test-var]
+  (fn [v]
+    (let [old-meta (meta v)
+          new-meta (assoc old-meta :test (fn [& _] nil) :old-var v)
+          suppressed (with-meta @v new-meta)]
+      (real-test-var suppressed))))
+
 (defn scan-tests []
   (let [real-test-var test/test-var]
     (binding [*tests* (atom [])
               test/report scan-report
-              test/test-var real-test-var]
+              test/test-var (suppress-test-var real-test-var)]
       (test/run-all-tests)
       @*tests*)))
 
