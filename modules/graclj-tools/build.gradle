@@ -6,9 +6,14 @@ plugins {
 sourceSets.main {
     resources.srcDir 'src/main/clojure'
 }
+sourceSets.test {
+    resources.srcDir 'src/test/clojure'
+}
 
 dependencies {
     compile 'org.clojure:clojure:1.8.0'
+    compile 'org.clojure:tools.namespace:0.2.11'
+    compile 'junit:junit:4.12'
 }
 
 publishing {
@@ -19,8 +24,24 @@ publishing {
     }
 }
 
-task sample(type: JavaExec) {
+ext.tools = new File(buildDir, 'tools')
+
+task compileTools(type: JavaExec) {
     classpath jar
     classpath configurations.compile
-    main = 'org.graclj.tools.clojure.Compiler'
+    classpath tools
+    main 'clojure.main'
+    args '--main', 'org.graclj.tools.compiler.clojure', file('src/main/clojure'), tools
+
+    doFirst {
+        tools.mkdirs()
+    }
 }
+
+test {
+    dependsOn compileTools
+    classpath += files(tools)
+    classpath += files('build/resources/test')
+    testClassesDir = tools
+}
+
