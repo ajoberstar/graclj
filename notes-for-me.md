@@ -50,3 +50,8 @@ May want Clojure JVM variants for:
     - ...
 - Misc
     - Devcards (does this need anything special?)
+
+#_(defn create-suite [test-ns]
+  (println "I'm here")
+  (println test-ns)
+  (eval `(gen-class :name ^{org.junit.runner.RunWith org.graclj.tools.test.ClojureTestRunner} ~(symbol (str test-ns)))))

@@ -26,14 +26,12 @@
 (defmulti scan-report :type)
 
 (defmethod scan-report :begin-test-var [m]
-  (println m)
   (let [test-var (-> m :var meta :old-var)
         description (describe-test test-var)
         test (->Test description test-var)]
     (swap! *tests* conj test)))
 
 (defmethod scan-report :default [m]
-  (println m)
   nil)
 
 (defn suppress-test-var [real-test-var]
@@ -131,23 +129,24 @@
 (defn -filter [this desc-filter]
   (letfn [(run? [test] (->> test :description (.shouldRun desc-filter)))
           (trim [tests] (filter run? tests))]
-    (swap! (.state this) update-in :tests trim)))
+    (swap! (.state this) update :tests trim)))
 
-(deftype ^{org.junit.runner.RunWith org.graclj.tools.test.ClojureTestRunner} GracljSuite [])
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generate suite stub.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(gen-class
+  :name ^{org.junit.runner.RunWith org.graclj.tools.test.ClojureTestRunner} clojure.test)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Does this work?
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (test/deftest addition-works2
-  (Thread/sleep 5000)
   (test/is (= (+ 1 2) 3)))
 
 (test/deftest subtraction-fails2
-  (Thread/sleep 5000)
   (test/is (= (- 2 1) 2)))
 
 (test/deftest multiplication-works2
-  (Thread/sleep 5000)
   (test/is (= (* 1 2) 2))
   (test/is (= (* 2 2) 4)))
