@@ -24,29 +24,16 @@ publishing {
     }
 }
 
-ext.tests = new File(buildDir, 'clj-tests')
+ext.cljClasses = new File(buildDir, 'classes-clj')
 
-task prepareCljTests(type: Copy) {
-    from sourceSets.main.allSource
-    from sourceSets.test.allSource
-    into tests
-}
-
-task compileCljTests(type: JavaExec) {
-    dependsOn prepareCljTests
-    classpath jar
+task compileClj(type: JavaExec) {
+    classpath file('src/main/clojure')
     classpath configurations.compile
-    classpath file('build/resources/test')
-    classpath tests
+    classpath cljClasses
     main 'clojure.main'
-    args '--main', 'org.graclj.tools.compiler.clojure', tests, tests
+    args '--main', 'org.graclj.tools.compiler.clojure', 'src/main/clojure', cljClasses
 }
 
-test {
-    dependsOn compileCljTests
-    classpath += files(tests)
-    testClassesDir = tests
-    testLogging {
-        events = ['passed', 'failed']
-    }
+jar {
+    from cljClasses
 }
