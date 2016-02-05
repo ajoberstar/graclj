@@ -13,6 +13,8 @@ sourceSets.test {
 dependencies {
     compile 'org.clojure:clojure:1.8.0'
     compile 'org.clojure:tools.namespace:0.2.11'
+    compile 'org.clojure:java.classpath:0.2.3'
+
     compile 'junit:junit:4.12'
 }
 
@@ -32,8 +34,12 @@ task compileClj(type: JavaExec) {
     classpath cljClasses
     main 'clojure.main'
     args '--main', 'org.graclj.tools.compiler.clojure', 'src/main/clojure', cljClasses
+    doFirst {
+        cljClasses.mkdirs()
+    }
 }
 
 jar {
     from cljClasses
+    dependsOn compileClj
 }

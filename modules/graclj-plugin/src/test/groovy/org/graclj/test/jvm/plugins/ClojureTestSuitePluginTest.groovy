@@ -52,7 +52,7 @@ model {
 """
         projectDir.newFolder('src', 'main', 'clojure', 'sample')
         projectDir.newFile('src/main/clojure/sample/code.clj') << """
-(ns sample.yay
+(ns sample.code
     (:require [clojure.string :as str]))
 
 (defn my-sample [x] (str/reverse x))
@@ -80,7 +80,7 @@ model {
             .buildAndFail()
         then: 'then one test passes and one succeeds'
         result.tasks(TaskOutcome.FAILED)*.path == [':testMainJarBinaryTest']
-        result.output ==~ /.*2 tests executed, 1 test failed.*/
+        result.output =~ /2 tests completed, 1 failed/
     }
 
     def 'executing some tests works'() {
@@ -90,7 +90,6 @@ model {
             .withArguments('clean', 'testMainJarBinaryTest', '--tests', '*.my-sample-works', '--stacktrace')
             .build()
         then: 'then one test passes'
-        result.tasks(':testMainJarBinaryTest').outcome == TaskOutcome.SUCCESS
-        result.output ==~ /.*1 tests executed, 0 tests failed.*/
+        result.task(':testMainJarBinaryTest').outcome == TaskOutcome.SUCCESS
     }
 }

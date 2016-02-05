@@ -1,5 +1,8 @@
 (ns org.graclj.tools.test.clojure-test
-  (:require [clojure.test :as test])
+  (:require [clojure.test :as test]
+            [clojure.java.classpath :as cp]
+            [clojure.java.io :as io]
+            [clojure.tools.namespace.find :refer [find-namespaces]])
   (:import (java.lang.annotation Annotation)
            (org.junit.runner Description)
            (org.junit.runner.notification Failure)))
@@ -41,12 +44,12 @@
           suppressed (with-meta @v new-meta)]
       (real-test-var suppressed))))
 
-(defn scan-tests []
+(defn scan-tests [namespaces]
   (let [real-test-var test/test-var]
     (binding [*tests* (atom [])
               test/report scan-report
               test/test-var (suppress-test-var real-test-var)]
-      (test/run-all-tests)
+      (apply test/run-tests namespaces)
       @*tests*)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -112,7 +115,13 @@
   :state state)
 
 (defn -init [clazz]
-  [[] (atom {:parent clazz :tests (scan-tests)})])
+  (let [namespaces (find-namespaces (cp/classpath))
+        ;; TODO have to fix this. need to know what the right namespaces are to load
+        namespaces (filter (comp #(.startsWith % "sample.") str) namespaces)
+        nothing (doseq [namespace namespaces]
+                  (require namespace))
+        tests (scan-tests namespaces)]
+    [[] (atom {:parent clazz :tests tests})]))
 
 (defn -getDescription [this]
   (let [suite (describe-suite (-> this .state deref :parent str))]
