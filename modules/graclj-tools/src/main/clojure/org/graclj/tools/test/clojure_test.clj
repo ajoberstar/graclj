@@ -121,15 +121,13 @@
                                (File/pathSeparator)))
         namespaces (find-namespaces test-dirs)]
     (doseq [namespace namespaces]
-      (println (str namespace))
       (require namespace))
     [[] (atom {:parent clazz :tests (scan-tests namespaces)})]))
 
 (defn -getDescription [this]
   (let [suite (describe-suite (-> this .state deref :parent str))]
     (doseq [test (-> this .state deref :tests)]
-      (.addChild (:description test)))
-    (println suite)
+      (.addChild suite (:description test)))
     suite))
 
 (defn -run [this notifier]

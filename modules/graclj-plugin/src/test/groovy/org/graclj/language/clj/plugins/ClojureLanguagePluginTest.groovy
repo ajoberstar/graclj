@@ -117,6 +117,11 @@ apply plugin: MyRules
         result.tasks*.path == [
             ':clean',
             ':components',
+            ':compileMainAotJarMainClojure',
+            ':processMainAotJarMainClojure',
+            ':createMainAotJar',
+            ':mainAotApiJar',
+            ':mainAotJar',
             ':processMainJarMainClojure',
             ':createMainJar',
             ':mainApiJar',
@@ -128,6 +133,95 @@ apply plugin: MyRules
             ':generatePomFileForMainPublication',
             ':publishMainPublicationToProjectRepository',
             ':verifyPublish'
+        ]
+    }
+
+    def 'aot clojure config works'() {
+        given: 'a build file with basic clojure configuration'
+        projectDir.newFile('build.gradle') << """
+buildscript {
+    repositories {
+        maven {
+            url = '${PLUGIN_REPO}'
+        }
+    }
+    dependencies {
+        classpath 'org.graclj:graclj-plugin:+'
+    }
+}
+
+apply plugin: 'org.graclj.clojure-lang'
+apply plugin: 'jvm-component'
+
+repositories {
+  jcenter()
+  mavenLocal()
+}
+
+model {
+    components {
+        main(JvmLibrarySpec) {
+            dependencies {
+                module 'org.clojure:clojure:1.8.0'
+            }
+        }
+    }
+}
+
+import org.graclj.internal.GracljInternal
+
+class MyRules extends RuleSource {
+    @Mutate
+    void createTask(ModelMap<Task> tasks, @Path('binaries.mainAotJar') JarBinarySpec jar, GracljInternal internal) {
+        tasks.create('clojureWorks', JavaExec) {
+            dependsOn jar
+            classpath jar.getJarFile()
+            classpath internal.resolve(jar.getLibrary().getDependencies())
+
+            main = 'sample.yay'
+            args 'does', 'it', 'work'
+        }
+    }
+}
+
+apply plugin: MyRules
+"""
+        projectDir.newFolder('src', 'main', 'clojure', 'sample')
+        projectDir.newFile('src/main/clojure/sample/yay.clj') << """
+(ns sample.yay
+    (:require [clojure.string :as str])
+    (:gen-class))
+
+(defn my-sample [x] (str/reverse x))
+
+(defn -main [& args]
+  (println (map my-sample args)))
+"""
+
+
+        when: 'the build task is executed'
+        def result = GradleRunner.create()
+            .withProjectDir(projectDir.root)
+            .withArguments('clean', 'components', 'build', 'clojureWorks', '--stacktrace')
+            .build()
+        then: 'the expected tasks were executed'
+        println result.output
+        result.tasks*.path == [
+            ':clean',
+            ':components',
+            ':compileMainAotJarMainClojure',
+            ':processMainAotJarMainClojure',
+            ':createMainAotJar',
+            ':mainAotApiJar',
+            ':mainAotJar',
+            ':processMainJarMainClojure',
+            ':createMainJar',
+            ':mainApiJar',
+            ':mainJar',
+            ':assemble',
+            ':check',
+            ':build',
+            ':clojureWorks'
         ]
     }
 }

@@ -1,6 +1,7 @@
 (ns org.graclj.tools.compiler.clojure
   (:require [clojure.java.io :as io]
-            [clojure.tools.namespace.find :refer [find-namespaces]]))
+            [clojure.tools.namespace.find :refer [find-namespaces]])
+  (:gen-class))
 
 (defn -main [source-path compile-path & args]
   (binding [*compile-path* compile-path]
