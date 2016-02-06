@@ -5,7 +5,8 @@
             [clojure.tools.namespace.find :refer [find-namespaces]])
   (:import (java.lang.annotation Annotation)
            (org.junit.runner Description)
-           (org.junit.runner.notification Failure)))
+           (org.junit.runner.notification Failure)
+           (java.io File)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; JUnit helpers
@@ -115,13 +116,14 @@
   :state state)
 
 (defn -init [clazz]
-  (let [namespaces (find-namespaces (cp/classpath))
-        ;; TODO have to fix this. need to know what the right namespaces are to load
-        namespaces (filter (comp #(.startsWith % "sample.") str) namespaces)
-        nothing (doseq [namespace namespaces]
-                  (require namespace))
-        tests (scan-tests namespaces)]
-    [[] (atom {:parent clazz :tests tests})]))
+  (let [test-dirs (map #(File. ^String %)
+                       (.split (System/getProperty "clojure.test.dirs")
+                               (File/pathSeparator)))
+        namespaces (find-namespaces test-dirs)]
+    (doseq [namespace namespaces]
+      (println (str namespace))
+      (require namespace))
+    [[] (atom {:parent clazz :tests (scan-tests namespaces)})]))
 
 (defn -getDescription [this]
   (let [suite (describe-suite (-> this .state deref :parent str))]

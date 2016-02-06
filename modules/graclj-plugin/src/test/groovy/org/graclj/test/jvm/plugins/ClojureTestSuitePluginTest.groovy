@@ -76,7 +76,7 @@ model {
         when: 'the test task is executed for all tests'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('clean', 'testMainJarBinaryTest', '--stacktrace')
+            .withArguments('clean', 'components', 'testMainJarBinaryTest', '--stacktrace')
             .buildAndFail()
         then: 'then one test passes and one succeeds'
         result.tasks(TaskOutcome.FAILED)*.path == [':testMainJarBinaryTest']
@@ -87,7 +87,7 @@ model {
         when: 'the test task is executed for one test'
         def result = GradleRunner.create()
             .withProjectDir(projectDir.root)
-            .withArguments('clean', 'testMainJarBinaryTest', '--tests', '*.my-sample-works', '--stacktrace')
+            .withArguments('clean', 'components', 'testMainJarBinaryTest', '--tests', '*.my-sample-works', '--stacktrace')
             .build()
         then: 'then one test passes'
         result.task(':testMainJarBinaryTest').outcome == TaskOutcome.SUCCESS
