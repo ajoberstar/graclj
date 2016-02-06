@@ -1,4 +1,4 @@
-package org.graclj.language.jvm.plugins
+package org.graclj.language.clj.plugins
 
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule

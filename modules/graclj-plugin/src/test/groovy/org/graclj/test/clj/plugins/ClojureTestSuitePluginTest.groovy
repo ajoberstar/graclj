@@ -1,4 +1,4 @@
-package org.graclj.test.jvm.plugins
+package org.graclj.test.clj.plugins
 
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome

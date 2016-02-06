@@ -1,6 +1,6 @@
-package org.graclj.language.jvm.plugins;
+package org.graclj.language.clj.plugins;
 
-import org.graclj.language.jvm.ClojureSourceSet;
+import org.graclj.language.clj.ClojureSourceSet;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Task;
 import org.gradle.internal.service.ServiceRegistry;

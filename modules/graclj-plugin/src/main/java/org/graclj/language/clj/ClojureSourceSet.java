@@ -1,4 +1,4 @@
-package org.graclj.language.jvm;
+package org.graclj.language.clj;
 
 import org.gradle.language.base.LanguageSourceSet;
 import org.gradle.model.Managed;

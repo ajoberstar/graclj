@@ -1,8 +1,7 @@
-package org.graclj.test.jvm.plugins;
+package org.graclj.test.clj.plugins;
 
 import org.graclj.internal.GracljInternal;
 import org.gradle.api.Task;
-import org.gradle.api.UncheckedIOException;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.jvm.internal.JvmAssembly;
@@ -13,8 +12,6 @@ import org.gradle.model.RuleSource;
 import org.gradle.platform.base.BinaryTasks;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

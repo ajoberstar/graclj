@@ -1,10 +1,9 @@
-package org.graclj.test.jvm.plugins;
+package org.graclj.test.clj.plugins;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.jvm.plugins.JUnitTestSuitePlugin;
 import org.gradle.jvm.plugins.JvmComponentPlugin;
-import org.gradle.jvm.plugins.JvmTestSuiteBasePlugin;
 import org.gradle.testing.base.plugins.TestingModelBasePlugin;
 
 public class ClojureTestSuitePlugin implements Plugin<Project> {

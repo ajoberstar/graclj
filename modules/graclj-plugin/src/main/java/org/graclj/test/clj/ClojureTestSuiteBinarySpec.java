@@ -1,4 +1,4 @@
-package org.graclj.test.jvm;
+package org.graclj.test.clj;
 
 import org.gradle.jvm.test.JvmTestSuiteBinarySpec;
 import org.gradle.model.Managed;
