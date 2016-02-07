@@ -6,9 +6,9 @@ Clojure plugin for Gradle
 
 Just want to see how to use it? Choose your own adventure:
 
-- [Lein Users](graclj-for-lein-users.md) -- What's a Gradle?
-- [Gradle Users](graclj-for-gradle-users.md) -- I'm used to "normal" Gradle
-- [Gradle Model Users](graclj-for-gradle3-users.md) -- I've played around with the model-based Gradle and just need the highlights
+- [Lein Users](docs/graclj-for-lein-users.md) -- What's a Gradle?
+- [Gradle Users](docs/graclj-for-gradle-users.md) -- I'm used to "normal" Gradle
+- [Gradle Model Users](docs/graclj-for-gradle3-users.md) -- I've played around with the model-based Gradle and just need the highlights
 
 ## Goals
 
