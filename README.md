@@ -4,6 +4,12 @@
 
 Clojure plugin for Gradle
 
+Just want to see how to use it? Choose your own adventure:
+
+- [Lein Users](graclj-for-lein-users.md) -- What's a Gradle?
+- [Gradle Users](graclj-for-gradle-users.md) -- I'm used to "normal" Gradle
+- [Gradle Model Users](graclj-for-gradle3-users.md) -- I've played around with the model-based Gradle and just need the highlights
+
 ## Goals
 
 - Provide a Gradle plugin for Clojure that feels native to Gradle and provides the features the Clojure community has
@@ -27,7 +33,7 @@ more detail.
 ## Roadmap
 
 - [0.1.0](https://github.com/graclj/graclj/milestones/0.1.0) will target Clojure builds at a very basic level, primarily just covering compilation and packaging.
-- [0.2.0](https://github.com/graclj/graclj/milestones/0.2.0) will target ClojureScript builds with the same goal. This is not intended to reconcile the relationship between the two.
-- [0.3.0](https://github.com/graclj/graclj/milestones/0.3.0) will try to make the combined Clojure/ClojureScript space mesh together, including `cljc` support.
+- [0.2.0](https://github.com/graclj/graclj/milestones/0.2.0) will enhance Clojure support with things like uberjar and REPL support
+- [0.3.0](https://github.com/graclj/graclj/milestones/0.3.0) will target ClojureScript builds with the same goal. This is not intended to reconcile the relationship between the two.
 - ...
 - [1.0.0](https://github.com/graclj/graclj/milestones/1.0.0) ... many more great things ...
