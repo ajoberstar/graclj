@@ -6,20 +6,24 @@ import spock.lang.Specification
 import java.nio.file.Paths
 
 class BasicLibraryTest extends Specification {
-    File projectDir = Paths.get(System.properties['projects.root'], 'basic-library').toFile()
+    GradleRunner runner
+
+    def setup() {
+        runner = GradleRunner.create()
+            .withProjectDir(Paths.get(System.properties['samples.projects.root'], 'basic-library').toFile())
+            .withGradleVersion(System.properties['samples.gradle.version'])
+    }
 
     def 'can publish to clojars'() {
         expect:
-        GradleRunner.create()
-            .withProjectDir(projectDir)
+        runner
             .withArguments('clean', 'components', 'publishMainPublicationToClojars', '--stacktrace')
             .build()
     }
 
     def 'can execute tests'() {
         when:
-        def result = GradleRunner.create()
-            .withProjectDir(projectDir)
+        def result = runner
             .withArguments('clean', 'components', 'testMainJarBinaryTest', '--stacktrace')
             .buildAndFail()
         then:

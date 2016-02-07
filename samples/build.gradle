@@ -9,9 +9,11 @@ dependencies {
     testCompile gradleTestKit()
 }
 
+ext.samplesDir = file("${buildDir}/samples")
+
 task prepSamples(type: Copy) {
     from 'src/projects'
-    into tasks.test.temporaryDir
+    into samplesDir
 }
 
 task prepProperties {
@@ -21,17 +23,26 @@ clojars_username=${clojars_username}
 clojars_password=${clojars_password}
 """.bytes
     doLast {
-        Files.list(tasks.test.temporaryDir.toPath())
+        Files.list(samplesDir.toPath())
             .filter { Files.isDirectory(it) }
             .map { sampleDir -> sampleDir.resolve('gradle.properties') }
             .forEach { propsFile -> Files.write(propsFile, contents)}
     }
 }
 
-test {
-    dependsOn prepProperties
-    dependsOn ':modules:graclj-plugin:publishMainPublicationToMavenLocal'
-    dependsOn ':modules:graclj-tools:publishMainPublicationToMavenLocal'
-    systemProperty 'plugin.repo', "${buildDir}/repo"
-    systemProperty 'projects.root', temporaryDir.absolutePath
+task test(overwrite: true)
+
+ext.supportedGradleVersions = ['2.12-20160205000031+0000']
+
+supportedGradleVersions.each { supportedGradleVersion ->
+    ext.taskName = "test${supportedGradleVersion}"
+    test.dependsOn taskName
+    tasks.create(taskName, Test) {
+        dependsOn prepProperties
+        dependsOn ':modules:graclj-plugin:publishMainPublicationToMavenLocal'
+        dependsOn ':modules:graclj-tools:publishMainPublicationToMavenLocal'
+
+        systemProperty 'samples.projects.root', samplesDir
+        systemProperty 'samples.gradle.version', supportedGradleVersion
+    }
 }

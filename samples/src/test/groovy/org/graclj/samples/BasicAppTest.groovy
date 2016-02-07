@@ -6,12 +6,17 @@ import spock.lang.Specification
 import java.nio.file.Paths
 
 class BasicAppTest extends Specification {
-    File projectDir = Paths.get(System.properties['projects.root'], 'basic-app').toFile()
+    GradleRunner runner
+
+    def setup() {
+        runner = GradleRunner.create()
+            .withProjectDir(Paths.get(System.properties['samples.projects.root'], 'basic-app').toFile())
+            .withGradleVersion(System.properties['samples.gradle.version'])
+    }
 
     def 'can execute main class'() {
         when:
-        def result = GradleRunner.create()
-            .withProjectDir(projectDir)
+        def result = runner
             .withArguments('clean', 'components', 'run', '--stacktrace')
             .build()
         then:
