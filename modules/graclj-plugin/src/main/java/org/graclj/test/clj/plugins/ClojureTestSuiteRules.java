@@ -31,10 +31,10 @@ public class ClojureTestSuiteRules extends RuleSource {
 
         tasks.create(binary.getName() + "GracljTools", Copy.class, task -> {
             testTask.dependsOn(task);
-            File tools = internal.resolve("org.graclj:graclj-tools:0.1.0-SNAPSHOT@jar").getSingleFile();
+            File tools = internal.resolve("org.graclj:graclj-tools:0.1.0-rc.1@jar").getSingleFile();
             task.from(task.getProject().zipTree(tools));
             task.into(binary.getClassesDir());
         });
-        testTask.setClasspath(testTask.getClasspath().plus(internal.resolve("org.graclj:graclj-tools:0.1.0-SNAPSHOT")));
+        testTask.setClasspath(testTask.getClasspath().plus(internal.resolve("org.graclj:graclj-tools:0.1.0-rc.1")));
     }
 }

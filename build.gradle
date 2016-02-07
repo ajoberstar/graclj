@@ -1,6 +1,6 @@
 allprojects {
     group = 'org.graclj'
-    version = '0.1.0-SNAPSHOT'
+    version = '0.1.0-rc.1'
 
     plugins.withId('java') {
         repositories {
@@ -12,6 +12,43 @@ allprojects {
         publishing {
             repositories {
                 mavenLocal()
+            }
+        }
+    }
+
+    plugins.withId('com.jfrog.bintray') {
+        bintray {
+            user = bintrayUser
+            key = bintrayKey
+
+            publications = ['main']
+
+            publish = false
+
+            pkg {
+                userOrg = 'graclj'
+                repo = 'maven'
+                name = 'graclj'
+
+                websiteUrl = 'https://github.com/graclj/graclj'
+                issueTrackerUrl = 'https://github.com/graclj/graclj/issues'
+                vcsUrl = 'https://github.com/graclj/graclj.git'
+
+                licenses = ['EPL-1.0']
+                labels = ['gradle', 'clojure', 'clojurescript', 'plugin']
+
+                publicDownloadNumbers = true
+
+                githubRepo = 'graclj/graclj'
+                githubReleaseNotesFile = 'README.md'
+
+                version {
+                    name = '0.1.0-rc.1'
+                    vcsTag = '0.1.0-rc.1'
+                    attributes = [
+                        'gradle-plugin': ['org.graclj.clojure-lang:org.graclj:graclj-plugin', 'org.graclj.clojure-test-suite:org.graclj:graclj-plugin']
+                    ]
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ The plugin is published in JCenter (not yet on the Gradle Plugin Portal).
 ```groovy
 buildscript {
     repositories { jcenter() }
-    dependencies { classpath 'org.graclj:graclj-plugin:0.1.0-SNAPSHOT' }
+    dependencies { classpath 'org.graclj:graclj-plugin:0.1.0-rc.1' }
 }
 
 // adds support for the Clojure language itself
