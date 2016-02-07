@@ -1,0 +1,37 @@
+import java.nio.file.Files
+
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile gradleTestKit()
+}
+
+task prepSamples(type: Copy) {
+    from 'src/projects'
+    into tasks.test.temporaryDir
+}
+
+task prepProperties {
+    dependsOn prepSamples
+    ext.contents = """
+clojars_username=${clojars_username}
+clojars_password=${clojars_password}
+""".bytes
+    doLast {
+        Files.list(tasks.test.temporaryDir.toPath())
+            .filter { Files.isDirectory(it) }
+            .map { sampleDir -> sampleDir.resolve('gradle.properties') }
+            .forEach { propsFile -> Files.write(propsFile, contents)}
+    }
+}
+
+test {
+    dependsOn prepProperties
+    dependsOn ':modules:graclj-plugin:publishMainPublicationToMavenLocal'
+    dependsOn ':modules:graclj-tools:publishMainPublicationToMavenLocal'
+    systemProperty 'plugin.repo', "${buildDir}/repo"
+    systemProperty 'projects.root', temporaryDir.absolutePath
+}

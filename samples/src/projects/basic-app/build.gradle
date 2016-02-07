@@ -1,0 +1,48 @@
+import org.gradle.jvm.test.JUnitTestSuiteSpec
+
+buildscript {
+    repositories { mavenLocal() }
+    dependencies { classpath 'org.graclj:graclj-plugin:0.1.0-SNAPSHOT' }
+}
+
+apply plugin: 'org.graclj.clojure-lang'
+apply plugin: 'org.graclj.clojure-test-suite'
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+model {
+    components {
+        main(JvmLibrarySpec) {
+            dependencies {
+                module 'org.clojure:clojure:1.8.0'
+            }
+        }
+    }
+    testSuites {
+        test(JUnitTestSuiteSpec) {
+            jUnitVersion '4.12'
+            testing $.components.main
+        }
+    }
+}
+
+import org.graclj.language.clj.tasks.ClojureCompile
+
+class MyRules extends RuleSource {
+    @Mutate
+    void createRunTask(ModelMap<Task> tasks, @Path('binaries.mainAotJar') JarBinarySpec binary, @Path('tasks.compileMainAotJarMainClojure') ClojureCompile compile) {
+        tasks.create('run', JavaExec) {
+            dependsOn binary.tasks.jar
+            classpath binary.tasks.jar
+            classpath compile.classpath
+
+            main = 'org.graclj.samples.app'
+            args 'first', 'second', 'third'
+        }
+    }
+}
+
+apply plugin: MyRules
