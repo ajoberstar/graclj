@@ -77,7 +77,7 @@ public class ClojureLanguageRules extends RuleSource {
 
     @Defaults
     public void addSourceSets(@Each JvmComponentSpec component) {
-        component.getSources().create("Clojure", ClojureSourceSet.class);
+        component.getSources().create("clojure", ClojureSourceSet.class);
     }
 
     @Defaults
