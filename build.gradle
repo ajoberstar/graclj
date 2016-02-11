@@ -1,3 +1,7 @@
+plugins {
+    id 'org.sonarqube' version '1.2'
+}
+
 allprojects {
     group = 'org.graclj'
     version = '0.1.0-rc.1'
@@ -50,6 +54,21 @@ allprojects {
                     ]
                 }
             }
+        }
+    }
+}
+
+tasks.sonarqube.onlyIf {
+    def branch = System.env['TRAVIS_BRANCH']
+    !branch || branch == 'master'
+}
+
+if (System.env['SONARQUBE_TOKEN']) {
+    sonarqube {
+        properties {
+            property 'sonar.host.url', 'http://sonarqube.ajoberstar.com'
+            property 'sonar.login', System.env['SONARQUBE_TOKEN']
+            property 'sonar.projectVersion', version.toString().split('-')[0]
         }
     }
 }

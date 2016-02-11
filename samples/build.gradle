@@ -30,13 +30,13 @@ clojars_password=${clojars_password}
     }
 }
 
-task test(overwrite: true)
+test.enabled = false
 
 ext.supportedGradleVersions = ['2.12-20160211000031+0000']
 
 supportedGradleVersions.each { supportedGradleVersion ->
     ext.taskName = "test${supportedGradleVersion}"
-    test.dependsOn taskName
+    check.dependsOn taskName
     tasks.create(taskName, Test) {
         dependsOn prepProperties
         dependsOn ':modules:graclj-plugin:publishMainPublicationToMavenLocal'
@@ -44,5 +44,7 @@ supportedGradleVersions.each { supportedGradleVersion ->
 
         systemProperty 'samples.projects.root', samplesDir
         systemProperty 'samples.gradle.version', supportedGradleVersion
+
+
     }
 }
