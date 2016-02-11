@@ -19,8 +19,8 @@ task prepSamples(type: Copy) {
 task prepProperties {
     dependsOn prepSamples
     ext.contents = """
-clojars_username=${clojars_username}
-clojars_password=${clojars_password}
+clojars_username=${System.env['CLOJARS_USERNAME']}
+clojars_password=${System.env['CLOJARS_PASSWORD']}
 """.bytes
     doLast {
         Files.list(samplesDir.toPath())
