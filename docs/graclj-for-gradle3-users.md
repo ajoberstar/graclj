@@ -1,6 +1,6 @@
 # Graclj for Gradle 3 Users
 
-See full samples under [src/samples/src/projects](../src/samples/src/projects).
+See full samples under [src/samples/src/projects](../samples/src/projects).
 
 ## Plugins
 
