@@ -1,5 +1,6 @@
 # graclj
 
+[![Build Status](https://travis-ci.org/graclj/graclj.svg?branch=master)](https://travis-ci.org/graclj/graclj)
 [![Join the chat at https://gitter.im/graclj/graclj](https://badges.gitter.im/graclj/graclj.svg)](https://gitter.im/graclj/graclj?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Clojure plugin for Gradle
