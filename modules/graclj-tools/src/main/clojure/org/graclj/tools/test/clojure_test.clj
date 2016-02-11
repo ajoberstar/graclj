@@ -1,6 +1,5 @@
 (ns org.graclj.tools.test.clojure-test
   (:require [clojure.test :as test]
-            [clojure.java.classpath :as cp]
             [clojure.java.io :as io]
             [clojure.tools.namespace.find :refer [find-namespaces]])
   (:import (java.lang.annotation Annotation)
