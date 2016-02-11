@@ -1,6 +1,6 @@
 # Graclj for Gradle 3 Users
 
-See full samples under [src/samples/src/projects](src/samples/src/projects).
+See full samples under [src/samples/src/projects](../src/samples/src/projects).
 
 ## Plugins
 
@@ -13,7 +13,7 @@ buildscript {
 }
 
 // adds support for the Clojure language itself
-apply plugin: 'org.graclj.clojure-lang
+apply plugin: 'org.graclj.clojure-lang'
 // adds support for clojure.test tests
 apply plugin: 'org.graclj.clojure-test-suite'
 ```
