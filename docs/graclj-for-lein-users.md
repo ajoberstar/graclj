@@ -1,3 +1,0 @@
-# Graclj for Leiningen Users
-
-Coming soon...

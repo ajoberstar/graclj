@@ -1,3 +1,0 @@
-# Graclj for Gradle Users
-
-Coming soon...
