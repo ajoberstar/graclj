@@ -7,9 +7,9 @@ Clojure plugin for Gradle's Software Model
 
 Just want to see how to use it? Choose your own adventure:
 
-- [Lein Users](docs/graclj-for-lein-users.md) -- What's a Gradle?
+- [Gradle Model Users](docs/graclj-for-gradle3-users.md) -- I've played around with the Gradle software model and just need the highlights
 - [Gradle Users](docs/graclj-for-gradle-users.md) -- I'm used to "normal" Gradle, but haven't used the new software model yet
-- [Gradle Model Users](docs/graclj-for-gradle3-users.md) -- I've played around with the model-based Gradle and just need the highlights
+- [Lein Users](docs/graclj-for-lein-users.md) -- What's a Gradle?
 
 **DISCLAIMER:** Currently Graclj only works on nightly versions of Gradle. See the [releases](https://github.com/graclj/graclj/releases) to find the appropriate Gradle version.
 
