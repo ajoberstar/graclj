@@ -13,6 +13,9 @@ bin
 .idea
 # Sublime
 *.sublime-*
+# SonarQube
+.sonar
+.sonar_lock
 # Temp Files
 *~
 *.swp
