@@ -3,13 +3,15 @@
 [![Build Status](https://travis-ci.org/graclj/graclj.svg?branch=master)](https://travis-ci.org/graclj/graclj)
 [![Join the chat at https://gitter.im/graclj/graclj](https://badges.gitter.im/graclj/graclj.svg)](https://gitter.im/graclj/graclj?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Clojure plugin for Gradle
+Clojure plugin for Gradle's Software Model
 
 Just want to see how to use it? Choose your own adventure:
 
 - [Lein Users](docs/graclj-for-lein-users.md) -- What's a Gradle?
-- [Gradle Users](docs/graclj-for-gradle-users.md) -- I'm used to "normal" Gradle
+- [Gradle Users](docs/graclj-for-gradle-users.md) -- I'm used to "normal" Gradle, but haven't used the new software model yet
 - [Gradle Model Users](docs/graclj-for-gradle3-users.md) -- I've played around with the model-based Gradle and just need the highlights
+
+**DISCLAIMER:** Currently Graclj only works on nightly versions of Gradle. See the [releases](https://github.com/graclj/graclj/releases) to find the appropriate Gradle version.
 
 ## Goals
 
