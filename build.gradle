@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = 'org.graclj'
-    version = '0.1.0-rc.1'
+    version = '0.1.0-rc.2'
 
     plugins.withId('java') {
         repositories {
@@ -49,8 +49,8 @@ allprojects {
                 githubReleaseNotesFile = 'README.md'
 
                 version {
-                    name = '0.1.0-rc.1'
-                    vcsTag = '0.1.0-rc.1'
+                    name = '0.1.0-rc.2'
+                    vcsTag = '0.1.0-rc.2'
                     attributes = [
                         'gradle-plugin': ['org.graclj.clojure-lang:org.graclj:graclj-plugin', 'org.graclj.clojure-test-suite:org.graclj:graclj-plugin']
                     ]
