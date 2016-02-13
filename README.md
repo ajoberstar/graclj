@@ -30,9 +30,21 @@ from various plugins and build scripts more understandable.
 See [the original thread](https://groups.google.com/forum/#!topic/clojuresque/1j24yiOGa30) on the Clojuresque mailing list for
 more detail.
 
+## Current Features
+
+### Clojure
+
+- Packaging into JARs
+- AOT compilation
+- clojure.test execution
+- Publishing to any repo supported by Gradle (including Clojars)
+
+### Clojurescript
+
+*Coming soon...*
+
 ## Roadmap
 
-- [0.1.0](https://github.com/graclj/graclj/milestones/0.1.0) will target Clojure builds at a very basic level, primarily just covering compilation and packaging.
 - [0.2.0](https://github.com/graclj/graclj/milestones/0.2.0) will enhance Clojure support with things like uberjar and REPL support
 - [0.3.0](https://github.com/graclj/graclj/milestones/0.3.0) will target ClojureScript builds with the same goal. This is not intended to reconcile the relationship between the two.
 - ...
