@@ -10,8 +10,8 @@ class BasicLibraryTest extends Specification {
 
     def setup() {
         runner = GradleRunner.create()
-            .withProjectDir(Paths.get(System.properties['samples.projects.root'], 'basic-library').toFile())
-            .withGradleVersion(System.properties['samples.gradle.version'])
+            .withProjectDir(Paths.get(System.properties['test.projects.root'], 'basic-library').toFile())
+            .withGradleVersion(System.properties['test.gradle.version'])
     }
 
     def 'can publish to clojars'() {

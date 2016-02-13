@@ -42,9 +42,7 @@ supportedGradleVersions.each { supportedGradleVersion ->
         dependsOn ':modules:graclj-plugin:publishMainPublicationToMavenLocal'
         dependsOn ':modules:graclj-tools:publishMainPublicationToMavenLocal'
 
-        systemProperty 'samples.projects.root', samplesDir
-        systemProperty 'samples.gradle.version', supportedGradleVersion
-
-
+        systemProperty 'test.projects.root', samplesDir
+        systemProperty 'test.gradle.version', supportedGradleVersion
     }
 }

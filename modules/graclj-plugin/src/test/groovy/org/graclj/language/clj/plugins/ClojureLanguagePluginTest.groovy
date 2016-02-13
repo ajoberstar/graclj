@@ -8,9 +8,17 @@ import spock.lang.Specification
 import java.nio.file.Paths
 
 class ClojureLanguagePluginTest extends Specification {
-    private static final URI PLUGIN_REPO = Paths.get(System.properties['plugin.repo']).toUri()
+    private static final URI PLUGIN_REPO = Paths.get(System.properties['test.plugin.repo']).toUri()
 
     @Rule TemporaryFolder projectDir = new TemporaryFolder()
+
+    GradleRunner runner
+
+    def setup() {
+        runner = GradleRunner.create()
+            .withProjectDir(projectDir.root)
+            .withGradleVersion(System.properties['test.gradle.version'])
+    }
 
     def 'basic clojure config works'() {
         given: 'a build file with basic clojure configuration'
@@ -109,8 +117,7 @@ apply plugin: MyRules
 
 
         when: 'the build task is executed'
-        def result = GradleRunner.create()
-            .withProjectDir(projectDir.root)
+        def result = runner
             .withArguments('clean', 'components', 'build', 'clojureWorks', 'publishMainPublicationToProjectRepository', 'verifyPublish', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'
@@ -200,8 +207,7 @@ apply plugin: MyRules
 
 
         when: 'the build task is executed'
-        def result = GradleRunner.create()
-            .withProjectDir(projectDir.root)
+        def result = runner
             .withArguments('clean', 'components', 'build', 'clojureWorks', '--stacktrace')
             .build()
         then: 'the expected tasks were executed'

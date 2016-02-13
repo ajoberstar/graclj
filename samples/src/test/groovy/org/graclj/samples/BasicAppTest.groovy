@@ -10,8 +10,8 @@ class BasicAppTest extends Specification {
 
     def setup() {
         runner = GradleRunner.create()
-            .withProjectDir(Paths.get(System.properties['samples.projects.root'], 'basic-app').toFile())
-            .withGradleVersion(System.properties['samples.gradle.version'])
+            .withProjectDir(Paths.get(System.properties['test.projects.root'], 'basic-app').toFile())
+            .withGradleVersion(System.properties['test.gradle.version'])
     }
 
     def 'can execute main class'() {

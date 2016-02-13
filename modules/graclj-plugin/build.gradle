@@ -1,3 +1,5 @@
+import orrg.ajoberstar.gradle.hack.GradleDist
+
 plugins {
     id 'groovy'
     id 'maven-publish'
@@ -8,7 +10,10 @@ configurations.all {
     exclude group: 'org.codehaus.groovy'
 }
 
+ext.primaryGradleVersion = '2.12-20160211000031+0000'
+
 dependencies {
+    compile GradleDist.createNightly(project, primaryGradleVersion).asFileTree
     compile gradleApi()
     compile localGroovy()
 
@@ -33,5 +38,6 @@ publishing {
 test {
     dependsOn 'publishMainPublicationToTestRepository'
     dependsOn ':modules:graclj-tools:publishMainPublicationToMavenLocal'
-    systemProperty 'plugin.repo', "${buildDir}/repo"
+    systemProperty 'test.plugin.repo', "${buildDir}/repo"
+    systemProperty 'test.gradle.version', primaryGradleVersion
 }

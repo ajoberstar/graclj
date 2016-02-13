@@ -9,11 +9,17 @@ import spock.lang.Specification
 import java.nio.file.Paths
 
 class ClojureTestSuitePluginTest extends Specification {
-    private static final URI PLUGIN_REPO = Paths.get(System.properties['plugin.repo']).toUri()
+    private static final URI PLUGIN_REPO = Paths.get(System.properties['test.plugin.repo']).toUri()
 
     @Rule TemporaryFolder projectDir = new TemporaryFolder()
 
+    GradleRunner runner
+
     def setup() {
+        runner = GradleRunner.create()
+            .withProjectDir(projectDir.root)
+            .withGradleVersion(System.properties['test.gradle.version'])
+
         projectDir.newFile('build.gradle') << """
 buildscript {
     repositories {
@@ -74,8 +80,7 @@ model {
 
     def 'executing all tests works'() {
         when: 'the test task is executed for all tests'
-        def result = GradleRunner.create()
-            .withProjectDir(projectDir.root)
+        def result = runner
             .withArguments('clean', 'components', 'testMainJarBinaryTest', '--stacktrace')
             .buildAndFail()
         then: 'then one test passes and one succeeds'
@@ -85,8 +90,7 @@ model {
 
     def 'executing some tests works'() {
         when: 'the test task is executed for one test'
-        def result = GradleRunner.create()
-            .withProjectDir(projectDir.root)
+        def result = runner
             .withArguments('clean', 'components', 'testMainJarBinaryTest', '--tests', '*.my-sample-works', '--stacktrace')
             .build()
         then: 'then one test passes'
