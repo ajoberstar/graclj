@@ -43,7 +43,7 @@ public class ClojureLanguageRules extends RuleSource {
                 task.setDescription(String.format("Compiles %s", sourceSet));
                 task.dependsOn(sourceSet);
                 task.setSource(sourceSet.getSource());
-                task.setCompiler(internal.resolve("org.graclj:graclj-tools:0.1.0-rc.2"));
+                task.setCompiler(internal.resolve("org.graclj:graclj-tools:0.1.0"));
                 task.setClasspath(internal.resolve(binary.getLibrary().getDependencies()));
 
                 // The first directory is the one created by JvmComponentPlugin.configureJvmBinaries()
