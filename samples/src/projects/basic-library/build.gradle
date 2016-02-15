@@ -2,7 +2,7 @@ import org.gradle.jvm.test.JUnitTestSuiteSpec
 
 buildscript {
     repositories { mavenLocal() }
-    dependencies { classpath 'org.graclj:graclj-plugin:0.1.0-rc.3' }
+    dependencies { classpath 'org.graclj:graclj-plugin:0.1.0-rc.4' }
 }
 
 apply plugin: 'org.graclj.clojure-lang'
