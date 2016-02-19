@@ -12,7 +12,7 @@ public final class GracljUtil {
 
     static {
         Properties props = new Properties();
-        try (InputStream stream = GracljUtil.class.getClassLoader().getResourceAsStream("/org/graclj/version.properties")) {
+        try (InputStream stream = GracljUtil.class.getResourceAsStream("/org/graclj/version.properties")) {
             props.load(stream);
         } catch (IOException e) {
             throw new UncheckedIOException(e);

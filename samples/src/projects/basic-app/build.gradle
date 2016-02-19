@@ -29,15 +29,17 @@ model {
     }
 }
 
+import org.graclj.internal.GracljInternal
 import org.graclj.language.clj.tasks.ClojureCompile
 
+// I'm assuming there's a better way to do this
 class MyRules extends RuleSource {
     @Mutate
-    void createRunTask(ModelMap<Task> tasks, @Path('binaries.mainAotJar') JarBinarySpec binary, @Path('tasks.compileMainAotJarMainClojure') ClojureCompile compile) {
+    void createRunTask(ModelMap<Task> tasks, @Path('binaries.mainAotJar') JarBinarySpec binary, GracljInternal internal) {
         tasks.create('run', JavaExec) {
             dependsOn binary.tasks.jar
             classpath binary.tasks.jar
-            classpath compile.classpath
+            classpath internal.resolve(binary.getLibrary().getDependencies())
 
             main = 'org.graclj.samples.app'
             args 'first', 'second', 'third'

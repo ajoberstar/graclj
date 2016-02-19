@@ -35,7 +35,7 @@ public class ClojureTestSuiteRules extends RuleSource {
 
         tasks.create(binary.getName() + "GracljTools", Copy.class, task -> {
             testTask.dependsOn(task);
-            File tools = internal.resolve("org.graclj:graclj-tools:" + GracljUtil.getGracljVersion()).getSingleFile();
+            File tools = internal.resolve("org.graclj:graclj-tools:" + GracljUtil.getGracljVersion() + "@jar").getSingleFile();
             task.from(task.getProject().zipTree(tools));
             task.into(binary.getClassesDir());
         });
