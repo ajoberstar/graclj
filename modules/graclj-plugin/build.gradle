@@ -1,4 +1,5 @@
 import orrg.ajoberstar.gradle.hack.GradleDist
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'groovy'
@@ -19,6 +20,10 @@ dependencies {
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile gradleTestKit()
+}
+
+processResources {
+    filter(ReplaceTokens, tokens: [gracljVersion: project.version.toString()])
 }
 
 task sourcesJar(type: Jar) {

@@ -57,7 +57,7 @@ publishing {
     publications {
         main(MavenPublication) {
             groupId = 'org.graclj.sample'
-            version = '0.2.0-SNAPSHOT'
+            version = '0.1.0'
             artifact(tasks.createMainJar)
         }
     }
@@ -79,7 +79,7 @@ task verifyPublish {
             .filter { path -> path.getFileName().toString().endsWith('.jar') }
             .collect(Collectors.toSet())
         def expected = [
-            repoDir.resolve("org/graclj/sample/\${project.name}/0.2.0-SNAPSHOT/\${project.name}-0.2.0-SNAPSHOT.jar"),
+            repoDir.resolve("org/graclj/sample/\${project.name}/0.1.0/\${project.name}-0.1.0.jar"),
         ] as Set
 
         assert files == expected

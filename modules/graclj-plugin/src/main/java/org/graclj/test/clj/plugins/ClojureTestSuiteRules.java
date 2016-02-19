@@ -1,6 +1,7 @@
 package org.graclj.test.clj.plugins;
 
 import org.graclj.internal.GracljInternal;
+import org.graclj.internal.GracljUtil;
 import org.gradle.api.Task;
 import org.gradle.api.UncheckedIOException;
 import org.gradle.api.tasks.Copy;
@@ -34,10 +35,10 @@ public class ClojureTestSuiteRules extends RuleSource {
 
         tasks.create(binary.getName() + "GracljTools", Copy.class, task -> {
             testTask.dependsOn(task);
-            File tools = internal.resolve("org.graclj:graclj-tools:0.2.0-SNAPSHOT@jar").getSingleFile();
+            File tools = internal.resolve("org.graclj:graclj-tools:" + GracljUtil.getGracljVersion()).getSingleFile();
             task.from(task.getProject().zipTree(tools));
             task.into(binary.getClassesDir());
         });
-        testTask.setClasspath(testTask.getClasspath().plus(internal.resolve("org.graclj:graclj-tools:0.2.0-SNAPSHOT")));
+        testTask.setClasspath(testTask.getClasspath().plus(internal.resolve("org.graclj:graclj-tools:" + GracljUtil.getGracljVersion())));
     }
 }

@@ -1,4 +1,5 @@
 import java.nio.file.Files
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id 'groovy'
@@ -14,6 +15,7 @@ ext.samplesDir = file("${buildDir}/samples")
 task prepSamples(type: Copy) {
     from 'src/projects'
     into samplesDir
+    filter(ReplaceTokens, tokens: [gracljVersion: project.version.toString()])
 }
 
 task prepProperties {

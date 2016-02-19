@@ -1,6 +1,7 @@
 package org.graclj.language.clj.plugins;
 
 import org.graclj.internal.GracljInternal;
+import org.graclj.internal.GracljUtil;
 import org.graclj.language.clj.ClojureAotJarBinarySpec;
 import org.graclj.language.clj.ClojureSourceSet;
 import org.graclj.language.clj.tasks.ClojureCompile;
@@ -65,7 +66,7 @@ public class ClojureLanguageRules extends RuleSource {
                 task.setDescription(String.format("Compiles %s", sourceSet));
                 task.dependsOn(sourceSet);
                 task.setSource(sourceSet.getSource());
-                task.setCompiler(internal.resolve("org.graclj:graclj-tools:0.2.0-SNAPSHOT"));
+                task.setCompiler(internal.resolve("org.graclj:graclj-tools:" + GracljUtil.getGracljVersion()));
                 task.setClasspath(internal.resolve(binary.getLibrary().getDependencies()));
                 task.setDestinationDir(binary.getClassesDir());
                 ((WithJvmAssembly) binary).getAssembly().builtBy(task);
