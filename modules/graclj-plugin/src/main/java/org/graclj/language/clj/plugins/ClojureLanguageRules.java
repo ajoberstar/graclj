@@ -7,7 +7,7 @@ import org.graclj.language.clj.ClojureSourceSet;
 import org.graclj.language.clj.tasks.ClojureCompile;
 import org.gradle.api.Task;
 import org.gradle.jvm.JarBinarySpec;
-import org.gradle.jvm.JvmComponentSpec;
+import org.gradle.jvm.test.JvmTestSuiteSpec;
 import org.gradle.jvm.JvmLibrarySpec;
 import org.gradle.jvm.JvmBinarySpec;
 import org.gradle.jvm.internal.WithJvmAssembly;
@@ -22,16 +22,23 @@ import org.gradle.platform.base.*;
 import static org.gradle.util.CollectionUtils.first;
 
 public class ClojureLanguageRules extends RuleSource {
-    @LanguageType
+    @ComponentType
     public void registerLanguage(TypeBuilder<ClojureSourceSet> builder) {
     }
 
+    // TODO generalize to JvmComponentSpec when handles getSources
     @Defaults
-    public void addSourceSets(@Each JvmComponentSpec component) {
+    public void addLibrarySourceSets(@Each JvmLibrarySpec component) {
         component.getSources().create("clojure", ClojureSourceSet.class);
     }
 
-    @BinaryType
+    // TODO generalize to JvmComponentSpec when handles getSources
+    @Defaults
+    public void addTestSuiteSourceSets(@Each JvmTestSuiteSpec component) {
+        component.getSources().create("clojure", ClojureSourceSet.class);
+    }
+
+    @ComponentType
     public void registerAotJarBinary(TypeBuilder<ClojureAotJarBinarySpec> builder) {
     }
 

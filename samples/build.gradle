@@ -34,7 +34,7 @@ clojars_password=${System.env['CLOJARS_PASSWORD']}
 
 test.enabled = false
 
-ext.supportedGradleVersions = ['2.12-20160211000031+0000']
+ext.supportedGradleVersions = ['2.12-20160219000033+0000']
 
 supportedGradleVersions.each { supportedGradleVersion ->
     ext.taskName = "test${supportedGradleVersion}"
