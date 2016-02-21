@@ -8,7 +8,10 @@ Clojure plugin for Gradle's Software Model
 
 Just want to see how to use it? Try [learning-graclj](https://github.com/graclj/learning-graclj/tree/learning-0.1.0)
 
-**DISCLAIMER:** Currently Graclj only works on nightly versions of Gradle. See the [releases](https://github.com/graclj/graclj/releases) to find the appropriate Gradle version.
+**DISCLAIMERS:**
+
+1. Graclj should not be considered stable until 1.0.0. Until then, minor versions (e.g. 0.1.0 to 0.2.0) will contain breaking changes.
+2. Currently Graclj only works on nightly versions of Gradle. See the [releases](https://github.com/graclj/graclj/releases) to find the appropriate Gradle version.
 
 ## Goals
 
