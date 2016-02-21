@@ -7,9 +7,9 @@ import org.gradle.api.tasks.TaskAction;
 import java.io.File;
 
 public class ClojureCompile extends SourceTask {
-    private FileCollection compiler;
-    private FileCollection classpath;
-    private File destinationDir;
+    private FileCollection compiler = getProject().files();
+    private FileCollection classpath = getProject().files();
+    private File destinationDir = null;
 
     @TaskAction
     public void compile() {

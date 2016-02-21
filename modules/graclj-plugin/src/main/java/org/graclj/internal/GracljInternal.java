@@ -7,16 +7,33 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.platform.base.DependencySpecContainer;
 import org.gradle.platform.base.ModuleDependencySpec;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 public class GracljInternal {
     private final ConfigurationContainer configurations;
     private final DependencyHandler dependencies;
+    private final String gracljVersion;
 
     public GracljInternal(ConfigurationContainer configurations, DependencyHandler dependencies) {
         this.configurations = configurations;
         this.dependencies = dependencies;
+
+        Properties props = new Properties();
+        try (InputStream stream = this.getClass().getResourceAsStream("/org/graclj/version.properties")) {
+            props.load(stream);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        gracljVersion = props.get("version").toString();
+    }
+
+    public String getGracljVersion() {
+        return gracljVersion;
     }
 
     public FileCollection resolve(DependencySpecContainer specs) {
