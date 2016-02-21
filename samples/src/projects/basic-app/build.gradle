@@ -6,6 +6,7 @@ buildscript {
 }
 
 apply plugin: 'org.graclj.clojure-lang'
+apply plugin: 'org.graclj.clojure-component'
 apply plugin: 'org.graclj.clojure-test-suite'
 
 repositories {
@@ -13,9 +14,12 @@ repositories {
     jcenter()
 }
 
+import org.graclj.platform.clj.*
+
 model {
     components {
-        main(JvmLibrarySpec) {
+        main(ClojureApplicationSpec) {
+            main = 'org.graclj.samples.app'
             dependencies {
                 module 'org.clojure:clojure:1.8.0'
             }
@@ -29,20 +33,13 @@ model {
     }
 }
 
-import org.graclj.internal.GracljInternal
-import org.graclj.language.clj.tasks.ClojureCompile
-
 // I'm assuming there's a better way to do this
 class MyRules extends RuleSource {
     @Mutate
-    void createRunTask(ModelMap<Task> tasks, @Path('binaries.mainAotJar') JarBinarySpec binary, GracljInternal internal) {
-        tasks.create('run', JavaExec) {
+    void createRunTask(ModelMap<Task> tasks, @Path('binaries.mainJar') JarBinarySpec binary) {
+        tasks.create('run', Exec) {
             dependsOn binary.tasks.jar
-            classpath binary.tasks.jar
-            classpath internal.resolve(binary.getLibrary().getDependencies())
-
-            main = 'org.graclj.samples.app'
-            args 'first', 'second', 'third'
+            commandLine 'java', '-jar', binary.jarFile, 'first', 'second', 'third'
         }
     }
 }

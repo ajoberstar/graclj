@@ -1,4 +1,4 @@
-package org.graclj.language.clj.plugins
+package org.graclj.platform.clj.plugins
 
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
@@ -7,7 +7,7 @@ import spock.lang.Specification
 
 import java.nio.file.Paths
 
-class ClojureLanguagePluginTest extends Specification {
+class ClojureComponentPluginTest extends Specification {
     private static final URI PLUGIN_REPO = Paths.get(System.properties['test.plugin.repo']).toUri()
 
     @Rule TemporaryFolder projectDir = new TemporaryFolder()
@@ -35,7 +35,7 @@ buildscript {
 }
 
 apply plugin: 'org.graclj.clojure-lang'
-apply plugin: 'jvm-component'
+apply plugin: 'org.graclj.clojure-component'
 apply plugin: 'maven-publish'
 
 repositories {
@@ -43,9 +43,11 @@ repositories {
   mavenLocal()
 }
 
+import org.graclj.platform.clj.*
+
 model {
     components {
-        main(JvmLibrarySpec) {
+        main(ClojureLibrarySpec) {
             dependencies {
                 module 'org.clojure:clojure:1.8.0'
             }
@@ -124,6 +126,125 @@ apply plugin: MyRules
         result.tasks*.path == [
             ':clean',
             ':components',
+            ':processMainJarClojure',
+            ':createMainJar',
+            ':mainApiJar',
+            ':mainJar',
+            ':assemble',
+            ':check',
+            ':build',
+            ':clojureWorks',
+            ':generatePomFileForMainPublication',
+            ':publishMainPublicationToProjectRepository',
+            ':verifyPublish'
+        ]
+    }
+
+    def 'uberjar clojure config works'() {
+        given: 'a build file with basic clojure configuration'
+        projectDir.newFile('build.gradle') << """
+buildscript {
+    repositories {
+        maven {
+            url = '${PLUGIN_REPO}'
+        }
+    }
+    dependencies {
+        classpath 'org.graclj:graclj-plugin:+'
+    }
+}
+
+apply plugin: 'org.graclj.clojure-lang'
+apply plugin: 'org.graclj.clojure-component'
+apply plugin: 'maven-publish'
+
+repositories {
+  jcenter()
+  mavenLocal()
+}
+
+import org.graclj.platform.clj.*
+
+model {
+    components {
+        main(ClojureApplicationSpec) {
+            main = 'sample.yay'
+            dependencies {
+                module 'org.clojure:clojure:1.8.0'
+            }
+        }
+    }
+}
+
+publishing {
+    publications {
+        main(MavenPublication) {
+            groupId = 'org.graclj.sample'
+            version = '0.1.0'
+            artifact(tasks.createMainJar)
+        }
+    }
+    repositories {
+        maven {
+            name = 'project'
+            url = file('build/repo')
+        }
+    }
+}
+
+import java.nio.file.Files
+import java.util.stream.Collectors
+
+task verifyPublish {
+    doLast {
+        def repoDir = file('build/repo').toPath()
+        def files = Files.walk(repoDir)
+            .filter { path -> path.getFileName().toString().endsWith('.jar') }
+            .collect(Collectors.toSet())
+        def expected = [
+            repoDir.resolve("org/graclj/sample/\${project.name}/0.1.0/\${project.name}-0.1.0.jar"),
+        ] as Set
+
+        assert files == expected
+    }
+}
+
+import org.graclj.internal.GracljInternal
+
+class MyRules extends RuleSource {
+    @Mutate
+    void createTask(ModelMap<Task> tasks, @Path('binaries.mainJar') JarBinarySpec jar, GracljInternal internal) {
+        tasks.create('clojureWorks', Exec) {
+            commandLine 'java', '-jar', jar.getJarFile(), 'does', 'it', 'work'
+        }
+    }
+}
+
+apply plugin: MyRules
+"""
+        projectDir.newFolder('src', 'main', 'clojure', 'sample')
+        projectDir.newFile('src/main/clojure/sample/yay.clj') << """
+(ns sample.yay
+    (:require [clojure.string :as str])
+    (:gen-class))
+
+(defn my-sample [x] (str/reverse x))
+
+(defn -main [& args]
+  (println (map my-sample args)))
+"""
+
+
+        when: 'the build task is executed'
+        def result = runner
+            .withArguments('clean', 'components', 'build', 'clojureWorks', 'publishMainPublicationToProjectRepository', 'verifyPublish', '--stacktrace')
+            .build()
+        then: 'the expected tasks were executed'
+        result.tasks*.path == [
+            ':clean',
+            ':components',
+            ':compileMainJarClojure',
+            ':extractDependenciesMainJar',
             ':processMainJarClojure',
             ':createMainJar',
             ':mainApiJar',

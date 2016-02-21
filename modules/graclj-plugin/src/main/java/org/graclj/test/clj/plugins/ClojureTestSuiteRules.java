@@ -1,6 +1,7 @@
 package org.graclj.test.clj.plugins;
 
 import org.graclj.internal.GracljInternal;
+import org.graclj.testing.clj.ClojureTestSuiteSpec;
 import org.gradle.api.Task;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.testing.Test;
@@ -10,12 +11,19 @@ import org.gradle.jvm.test.JUnitTestSuiteBinarySpec;
 import org.gradle.model.ModelMap;
 import org.gradle.model.RuleSource;
 import org.gradle.platform.base.BinaryTasks;
+import org.gradle.platform.base.ComponentType;
+import org.gradle.platform.base.TypeBuilder;
 
 import java.io.File;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ClojureTestSuiteRules extends RuleSource {
+    @ComponentType
+    public void registerTestSuite(TypeBuilder<ClojureTestSuiteSpec> builder) {
+        // using managed type
+    }
+
     @BinaryTasks
     public void copyGracljTools(ModelMap<Task> tasks, JUnitTestSuiteBinarySpec binary, GracljInternal internal) {
         Test testTask = binary.getTasks().getRun();

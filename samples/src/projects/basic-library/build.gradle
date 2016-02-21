@@ -6,6 +6,7 @@ buildscript {
 }
 
 apply plugin: 'org.graclj.clojure-lang'
+apply plugin: 'org.graclj.clojure-component'
 apply plugin: 'org.graclj.clojure-test-suite'
 apply plugin: 'maven-publish'
 
@@ -14,9 +15,11 @@ repositories {
     jcenter()
 }
 
+import org.graclj.platform.clj.*
+
 model {
     components {
-        main(JvmLibrarySpec) {
+        main(ClojureLibrarySpec) {
             dependencies {
                 module 'org.clojure:clojure:1.8.0'
             }
@@ -36,9 +39,6 @@ publishing {
             groupId = 'org.graclj.samples'
             version = '0.1.0-SNAPSHOT'
             artifact(tasks.createMainJar)
-            artifact(tasks.createMainAotJar) {
-                classifier = 'aot'
-            }
         }
     }
     repositories {
