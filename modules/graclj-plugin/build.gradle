@@ -11,10 +11,10 @@ configurations.all {
     exclude group: 'org.codehaus.groovy'
 }
 
-ext.primaryGradleVersion = '2.12-20160221000027+0000'
+ext.primaryGradleVersion = '2.12-rc-1'
 
 dependencies {
-    compile GradleDist.createNightly(project, primaryGradleVersion).asFileTree
+    compile GradleDist.create(project, primaryGradleVersion).asFileTree
     compile gradleApi()
     compile localGroovy()
 
