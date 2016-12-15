@@ -1,8 +1,8 @@
 # graclj
 
 [![Build Status](https://travis-ci.org/graclj/graclj.svg?branch=master)](https://travis-ci.org/graclj/graclj)
+[![Quality Gate](https://sonarqube.ajoberstar.com/api/badges/gate?key=org.graclj:graclj)](https://sonarqube.ajoberstar.com/dashboard/index/org.graclj:graclj)
 [![Join the chat at https://gitter.im/graclj/graclj](https://badges.gitter.im/graclj/graclj.svg)](https://gitter.im/graclj/graclj?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Join the chat at https://clojurians.slack.com/messages/graclj/](https://img.shields.io/badge/slack-%23graclj-blue.svg)](https://clojurians.slack.com/messages/graclj/)
 
 Clojure plugin for Gradle's Software Model
 
