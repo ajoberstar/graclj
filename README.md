@@ -4,6 +4,8 @@
 [![Quality Gate](https://sonarqube.ajoberstar.com/api/badges/gate?key=org.graclj:graclj)](https://sonarqube.ajoberstar.com/dashboard/index/org.graclj:graclj)
 [![Join the chat at https://gitter.im/graclj/graclj](https://badges.gitter.im/graclj/graclj.svg)](https://gitter.im/graclj/graclj?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+**NOTE: Use [gradle-clojure](https://github.com/gradle-clojure/gradle-clojure) instead. This is no longer maintained.**
+
 Clojure plugin for Gradle's Software Model
 
 Just want to see how to use it? Try [learning-graclj](https://github.com/graclj/learning-graclj/tree/learning-0.1.0)
